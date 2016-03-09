@@ -56,8 +56,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IRC\IRCConnection.cs" />
     <Compile Include="IRC\Types\ChannelMessage.cs" />
     <Compile Include="IRC\Types\ChannelUser.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="TabLayout.xaml.cs">
       <DependentUpon>TabLayout.xaml</DependentUpon>
     </Compile>
@@ -72,7 +78,7 @@
     <Compile Include="IRC\Client.cs" />
     <Compile Include="IRC\Net\Connect.cs" />
     <Compile Include="IRC\Net\Disconnect.cs" />
-    <Compile Include="IRC\Server.cs" />
+    <Compile Include="IRC\IRCServer.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -85,11 +91,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

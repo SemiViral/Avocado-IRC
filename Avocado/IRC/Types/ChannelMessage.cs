@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Navigation;
 
 namespace Avocado.IRC.Types {
-	internal class ChannelMessage {
+	public class ChannelMessage {
 		private static readonly Regex MessageRegex =
-			new Regex(@"^:(?<Sender>[^\s]+)\s(?<Type>[^\s]+)\s(?<Recipient>[^\s]+)\s?:?(?<Args>.*)", RegexOptions.Compiled);
+			new Regex(@"^:(?<Sender>[^\s]+)\s(?<Type>[^\s]+)\s(?<Target>[^\s]+)\s?:?(?<Args>.*)", RegexOptions.Compiled);
 
 		private static readonly Regex SenderRegex = new Regex(@"^(?<Nickname>[^\s]+)!(?<Realname>[^\s]+)@(?<Hostname>[^\s]+)",
 			RegexOptions.Compiled);
@@ -14,6 +13,10 @@ namespace Avocado.IRC.Types {
 		public ChannelMessage(string rawData) {
 			RawMessage = rawData;
 			Parse(RawMessage);
+
+			if (IsRealUser) return;
+
+			Target = Hostname;
 		}
 
 		public string RawMessage { get; }
@@ -22,7 +25,7 @@ namespace Avocado.IRC.Types {
 		public string Nickname { get; private set; }
 		public string Realname { get; private set; }
 		public string Hostname { get; private set; }
-		public string Recipient { get; private set; }
+		public string Target { get; private set; }
 		public string Type { get; set; }
 		public string Args { get; private set; }
 		public List<string> SplitArgs { get; private set; } = new List<string>();
@@ -39,9 +42,9 @@ namespace Avocado.IRC.Types {
 			Realname = messageMatch.Groups["Sender"].Value.ToLower();
 			Hostname = messageMatch.Groups["Sender"].Value;
 			Type = messageMatch.Groups["Type"].Value;
-			Recipient = messageMatch.Groups["Recipient"].Value.StartsWith(":")
-				? messageMatch.Groups["Recipient"].Value.Substring(1)
-				: messageMatch.Groups["Recipient"].Value;
+			Target = messageMatch.Groups["Target"].Value.StartsWith(":")
+				? messageMatch.Groups["Target"].Value.Substring(1)
+				: messageMatch.Groups["Target"].Value;
 			Args = messageMatch.Groups["Args"].Value;
 			SplitArgs = Args?.Trim().Split(new[] {' '}, 4).ToList();
 

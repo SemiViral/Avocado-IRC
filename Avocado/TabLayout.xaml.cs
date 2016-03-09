@@ -10,6 +10,7 @@ namespace Avocado {
 	public partial class TabLayout {
 		public string TabName { get; }
 		public int ServerIndex { get; }
+		public Guid UniqueId { get; }
 
 		public event EventHandler<MessageEventArgs> SendMessageEvent;
 
@@ -18,6 +19,8 @@ namespace Avocado {
 
 			ServerIndex = serverIndex;
 			TabName = tabName;
+
+			UniqueId = Guid.NewGuid();
 		}
 
 		public void Output(string text) {
