@@ -6,18 +6,19 @@ using Avocado.Model;
 
 namespace Avocado.ViewModel {
 	public class ChannelViewModel {
-		public string SendText { get; set; }
-		public string Name { get; set; }
-
-		public ObservableCollection<ChannelUser> Users { get; } = new ObservableCollection<ChannelUser>(); 
-		public ObservableCollection<Message> Messages { get; } = new ObservableCollection<Message>(); 
 		public List<Message> TempraryArchive = new List<Message>();
-
-		public event EventHandler<Message> SendMessageEvent;
 
 		public ChannelViewModel(string name) {
 			Name = name;
 		}
+
+		public string SendText { get; set; }
+		public string Name { get; set; }
+
+		public ObservableCollection<ChannelUser> Users { get; } = new ObservableCollection<ChannelUser>();
+		public ObservableCollection<Message> Messages { get; } = new ObservableCollection<Message>();
+
+		public event EventHandler<Message> SendMessageEvent;
 
 		public void AppendMessage(Message message) {
 			Messages.Add(message);
@@ -30,10 +31,9 @@ namespace Avocado.ViewModel {
 			if (SendText.StartsWith("/")) {
 				string[] splitText = SendText.Split(new[] {' '}, 2);
 				SendMessageEvent?.Invoke(this, new Message(splitText[0].Substring(1).ToUpper(), splitText[1]));
-			} else {
-				SendMessageEvent?.Invoke(this, new Message("PRIVMSG", Name, SendText.Trim()));
-			}
+			} else SendMessageEvent?.Invoke(this, new Message("PRIVMSG", Name, SendText.Trim()));
 
+			SendText = string.Empty;
 			e.Handled = true;
 		}
 	}

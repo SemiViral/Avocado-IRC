@@ -5,54 +5,66 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Threading;
 using Avocado.Model;
 
 namespace Avocado.ViewModel {
-	public class ServerViewModel {
+	public class ServerViewModel : INotifyPropertyChanged {
+		private static readonly string[] IrrelevantNicknames = {"NickServ", "ChanServ", MainViewModel.Nickname};
+
+		private bool _hostIsSelected;
+
 		public ServerViewModel(string address, int port) {
 			Hostname = address;
 			Port = port;
 
-			Connection = new Server(address, port);
-			Connection.MessageRecieved += OutputMessageOnEvent;
+			CreateChannel(Hostname);
+			CreateChannel("Jesuits");
+			CreateChannel("Jesuitsv2");
 
-			Thread connectionThread = new Thread(Connection.Listen);
+			Connection = new Server(address, port);
+			Connection.MessageRecieved += (sender, message) => DispatchAction(() => OnMessageRecieved(message));
+
+			Thread connectionThread = new Thread(Connection.Listen) {
+				IsBackground = true
+			};
 			connectionThread.Start();
 
 			PreConnect();
 
-			CreateChannel(Hostname);
-			CreateChannel("Jesuits");
 			ShouldRun = true;
-
 		}
 
 		public bool ShouldRun { get; private set; }
-		public bool IsVerified { get; private set; }
 
-		private static readonly string[] IrrelevantNicknames = {"NickServ", "ChanServ"};
+		public bool HostIsSelected {
+			get { return _hostIsSelected; }
+			set {
+				_hostIsSelected = value;
+				Debug.WriteLine(value);
+				if (!value) return;
 
-		public string Hostname { get; set; }
+				SelectedChannel = GetChannel(Hostname);
+			}
+		}
+
+		public bool IsVerified { get; } = false;
+
+		private string _hostname;
+		public string Hostname {
+			get { return _hostname; }
+			set {
+				if (value == _hostname) return;
+
+				_hostname = value;
+				NotifyPropertyChanged("Hostname");
+			}
+		}
 
 		public int Port { get; private set; }
 
 		public Server Connection { get; }
 		public ChannelViewModel SelectedChannel { get; set; }
-
-		private ListBoxItem _selectedItem;
-		public ListBoxItem SelectedItem {
-			get {
-				return _selectedItem;
-			}
-			set {
-				_selectedItem = value;
-
-				Debug.WriteLine(value.Content.ToString());
-				SelectedChannel = GetChannel(value.Name);
-			}
-		}
 
 		public ObservableCollection<ChannelViewModel> Channels { get; } = new ObservableCollection<ChannelViewModel>();
 
@@ -76,59 +88,64 @@ namespace Avocado.ViewModel {
 		}
 
 		public ChannelViewModel GetChannel(string name) {
-			return Channels.FirstOrDefault(channel => channel.Name.Equals(name));
+			return string.IsNullOrEmpty(name) ? null : Channels.FirstOrDefault(channel => channel.Name.Equals(name));
 		}
 
 		public void CheckChangeHost(string hostname) {
-			if (string.IsNullOrEmpty(hostname)
-				|| !GetHost(hostname).Equals(GetHost(Hostname))) return;
-			
-			foreach (ChannelViewModel channelViewModel in Channels) {
-				Debug.WriteLine(channelViewModel.Name);
-			}
+			if (!GetHost(hostname).Equals(GetHost(Hostname))) return;
+
 			GetChannel(Hostname).Name = hostname;
 			Hostname = hostname;
 		}
 
-		public bool IsIrrelevantMessage(Message message) {
-			if (!IsVerified || !IrrelevantNicknames.Contains(message.Nickname)) return false;
+		// this was a grand waste of time...
+		//public bool IsIrrelevantMessage(Message message) {
+		//	if (message.Target.Equals(MainViewModel.Nickname)) {
+		//		message.Target = Hostname;
+		//		return true;
+		//	}
 
-			return !Channels.Any(chan => IrrelevantNicknames.Contains(chan.Name));
-		}
+		//	if (message.IsRealUser) return false;
+		//	if (string.IsNullOrEmpty(message.Nickname) ||
+		//		!IrrelevantNicknames.Contains(message.Nickname)) return false;
+		//	if (!string.IsNullOrEmpty(message.Target) &&
+		//		Channels.Any(chan => IrrelevantNicknames.Contains(chan.Name))) return false;
+
+		//	message.Target = Hostname;
+		//	return true;
+		//}
 
 		public static void DispatchAction(Action action) {
-			if (Application.Current.Dispatcher.CheckAccess()) {
-				action?.Invoke();
-			} else {
-				Application.Current.Dispatcher?.Invoke(DispatcherPriority.Normal, action);
-			}
+			if (Application.Current == null) return;
+
+			if (Application.Current.Dispatcher.CheckAccess()) action?.Invoke();
+			else Application.Current.Dispatcher?.Invoke(DispatcherPriority.Normal, action);
 		}
 
-		public void OnSelectionChangedEvent(object sender, SelectionChangedEventArgs e) {
-			foreach (var item in e.AddedItems) {
-				Debug.WriteLine(item.GetType() + item.ToString());
-			}
-		}
-
-		private void OutputMessageOnEvent(object sender, Message message) {
+		private void OnMessageRecieved(Message message) {
 			if (message.IsPing) {
 				Connection.Write(message.Args);
 				return;
 			}
 
-			if (!message.IsRealUser
-				|| IsIrrelevantMessage(message)) {
-				CheckChangeHost(message.Target);
+			if (message.Type.Equals("NOTICE") ||
+				message.Type.Equals("MODE"))
 				message.Target = Hostname;
-			}
-			
-			Debug.WriteLine(message.RawMessage + " " + message.Target);
 
-			DispatchAction(() => GetChannel(message.Target).AppendMessage(message));
+			CheckChangeHost(message.Target);
+
+			Debug.WriteLine(message.RawMessage);
+			GetChannel(message.Target).AppendMessage(message);
 		}
 
 		private void SendMessageOnEvent(object sender, Message message) {
 			Connection.Write(message);
 		}
+
+		private void NotifyPropertyChanged(string info) {
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }

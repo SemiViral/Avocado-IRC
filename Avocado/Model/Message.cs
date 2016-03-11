@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Avocado.Model {
 	internal class Regexes {
 		public static readonly Regex Message =
-	new Regex(@"^:(?<Sender>[^\s]+)\s(?<Type>[^\s]+)\s(?<Target>[^\s]+)\s?:?(?<Args>.*)", RegexOptions.Compiled);
+			new Regex(@"^:(?<Sender>[^\s]+)\s(?<Type>[^\s]+)\s(?<Target>[^\s]+)\s?:?(?<Args>.*)", RegexOptions.Compiled);
 
 		public static readonly Regex Sender = new Regex(@"^(?<Nickname>[^\s]+)!(?<Realname>[^\s]+)@(?<Hostname>[^\s]+)",
 			RegexOptions.Compiled);
@@ -38,10 +38,9 @@ namespace Avocado.Model {
 		}
 
 		public string RawMessage { get; }
-		public string Timestamp { get; } = DateTime.Now.ToShortTimeString();
+		public string Timestamp { get; } = string.Concat("at ", DateTime.Now.ToShortTimeString());
 		public bool IsRealUser { get; private set; }
 		public bool IsPing { get; private set; }
-
 
 		public string Nickname { get; set; }
 		public string Realname { get; private set; }
@@ -53,7 +52,8 @@ namespace Avocado.Model {
 		public List<string> SplitArgs { get; private set; } = new List<string>();
 
 		public void Parse(string rawData) {
-			if (CheckPing() || !Regexes.Message.IsMatch(rawData)) return;
+			if (CheckPing() ||
+				!Regexes.Message.IsMatch(rawData)) return;
 
 			// begin parsing message into sections
 			Match messageMatch = Regexes.Message.Match(rawData);
