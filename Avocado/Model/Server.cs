@@ -2,8 +2,8 @@
 using System.IO;
 using System.Net.Sockets;
 
-namespace Avocado.IRC {
-	public class IRCConnection : IDisposable {
+namespace Avocado.Model {
+	public class Server : IDisposable {
 		private readonly TcpClient _tcp;
 		private readonly NetworkStream _stream;
 		private readonly StreamWriter _writer;
@@ -11,7 +11,7 @@ namespace Avocado.IRC {
 
 		private bool _disposed;
 
-		public IRCConnection(string address, int port) {
+		public Server(string address, int port) {
 			_tcp = new TcpClient(address, port);
 			_stream = _tcp.GetStream();
 			_writer = new StreamWriter(_stream);
@@ -22,10 +22,8 @@ namespace Avocado.IRC {
 			return _reader.ReadLine();
 		}
 
-		public void Write(string type, string text, string recipient = null) {
-			string writable = string.IsNullOrEmpty(recipient)
-				? string.Concat(type, " ", recipient, " ", text) : string.Concat(type, " ", text);
-			_writer.WriteLine(writable);
+		public void Write(Message message) {
+			_writer.WriteLine(message.RawMessage);
 			_writer.Flush();
 		}
 
@@ -37,9 +35,9 @@ namespace Avocado.IRC {
 		protected virtual void Dispose(bool dispose) {
 			if (!dispose || _disposed) return;
 			
-			_writer?.Dispose();
-			_reader?.Dispose();
-			_stream?.Dispose();
+			_writer.Dispose();
+			_reader.Dispose();
+			_stream.Dispose();
 			_tcp.Close();
 
 			_disposed = true;

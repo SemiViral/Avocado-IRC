@@ -56,17 +56,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="IRC\IRCConnection.cs" />
-    <Compile Include="IRC\Types\ChannelMessage.cs" />
-    <Compile Include="IRC\Types\ChannelUser.cs" />
+    <Compile Include="MessageUserControl.xaml.cs">
+      <DependentUpon>MessageUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Server.cs" />
+    <Compile Include="Model\Message.cs" />
+    <Compile Include="Model\ChannelUser.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TabLayout.xaml.cs">
-      <DependentUpon>TabLayout.xaml</DependentUpon>
+    <Compile Include="ChannelUserControl.xaml.cs">
+      <DependentUpon>ChannelUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SelectionListUserControl.xaml.cs">
+      <DependentUpon>SelectionListUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\ChannelViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -75,15 +83,21 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IRC\Client.cs" />
-    <Compile Include="IRC\Net\Connect.cs" />
-    <Compile Include="IRC\Net\Disconnect.cs" />
-    <Compile Include="IRC\IRCServer.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\ServerViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="TabLayout.xaml">
+    <Page Include="MessageUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChannelUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectionListUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -111,13 +125,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\avocado rubbing itself.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Icon.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\oie_transparent.png" />
+    <None Include="Resources\noise.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

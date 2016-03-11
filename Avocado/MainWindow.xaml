@@ -3,11 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Avocado"
-        mc:Ignorable="d"
+		xmlns:local="clr-namespace:Avocado.ViewModel"
+		xmlns:m="clr-namespace:Avocado.Model"
+		xmlns:root="clr-namespace:Avocado"
+		mc:Ignorable="d"
         Title="Avocado IRC" Height="470.156" Width="701.281">
 	<Grid Margin="0,0,3.667,0.667">
-		<TabControl x:Name="TabControlPrimary" RenderTransformOrigin="0.5,0.5" DockPanel.Dock="Top" Margin="10,0,10,51" Background="#FFFFB5B5"/>
-		<Button x:Name="ButtonConnect" Content="Connect&#xD;&#xA;" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="88" Click="ButtonConnect_Click" Height="22"/>
+		<ListBox x:Name="ListBoxPrimary" ItemsSource="{Binding Servers}" ItemTemplate="{DynamicResource ServersTemplate}" Foreground="{x:Null}" BorderBrush="{x:Null}" Background="#FF4D4949" Width="200" HorizontalAlignment="Left"/>
+		<TabControl x:Name="TabControlPrimary" ItemsSource="{Binding Servers}" RenderTransformOrigin="0.5,0.5" DockPanel.Dock="Top" Margin="200,0,10,0" Background="#FFFFB5B5" BorderBrush="{x:Null}" Foreground="{x:Null}"/>
 	</Grid>
+
+	<Window.DataContext>
+		<local:MainViewModel/>
+	</Window.DataContext>
+
+	<Window.Resources>
+		<DataTemplate x:Key="ServersTemplate" DataType="{x:Type root:SelectionListUserControl}">
+			<root:SelectionListUserControl/>
+		</DataTemplate>
+	</Window.Resources>
 </Window>

@@ -2,15 +2,32 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Avocado.IRC.Types {
-	public class ChannelMessage {
-		private static readonly Regex MessageRegex =
-			new Regex(@"^:(?<Sender>[^\s]+)\s(?<Type>[^\s]+)\s(?<Target>[^\s]+)\s?:?(?<Args>.*)", RegexOptions.Compiled);
+namespace Avocado.Model {
+	internal class Regexes {
+		public static readonly Regex Message =
+	new Regex(@"^:(?<Sender>[^\s]+)\s(?<Type>[^\s]+)\s(?<Target>[^\s]+)\s?:?(?<Args>.*)", RegexOptions.Compiled);
 
-		private static readonly Regex SenderRegex = new Regex(@"^(?<Nickname>[^\s]+)!(?<Realname>[^\s]+)@(?<Hostname>[^\s]+)",
+		public static readonly Regex Sender = new Regex(@"^(?<Nickname>[^\s]+)!(?<Realname>[^\s]+)@(?<Hostname>[^\s]+)",
 			RegexOptions.Compiled);
+	}
 
-		public ChannelMessage(string rawData) {
+	public class Message {
+		public Message(string type, string target, string message) {
+			Type = type;
+			Target = target;
+			Args = message;
+
+			RawMessage = $"{Type} {Target} {Args}";
+		}
+
+		public Message(string type, string args) {
+			Type = type;
+			Args = args;
+
+			RawMessage = $"{Type} {Args}";
+		}
+
+		public Message(string rawData) {
 			RawMessage = rawData;
 			Parse(RawMessage);
 
@@ -26,16 +43,17 @@ namespace Avocado.IRC.Types {
 		public string Realname { get; private set; }
 		public string Hostname { get; private set; }
 		public string Target { get; private set; }
-		public string Type { get; set; }
+		public string Type { get; private set; }
 		public string Args { get; private set; }
+
 		public List<string> SplitArgs { get; private set; } = new List<string>();
 
 		public void Parse(string rawData) {
-			if (!MessageRegex.IsMatch(rawData)) return;
+			if (!Regexes.Message.IsMatch(rawData)) return;
 
 			// begin parsing message into sections
-			Match messageMatch = MessageRegex.Match(rawData);
-			Match senderMatch = SenderRegex.Match(messageMatch.Groups["Sender"].Value);
+			Match messageMatch = Regexes.Message.Match(rawData);
+			Match senderMatch = Regexes.Sender.Match(messageMatch.Groups["Sender"].Value);
 
 			// class property setting
 			Nickname = messageMatch.Groups["Sender"].Value;
