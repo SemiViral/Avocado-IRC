@@ -5,18 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Avocado.ViewModel"
              xmlns:avocado="clr-namespace:Avocado"
+			 xmlns:m="clr-namespace:Avocado.Model"
              mc:Ignorable="d" d:DesignWidth="300" Width="Auto">
 	<Grid Background="#FF3E3E3E">
-		<TextBox x:Name="Hostname" Text="{Binding Hostname}" TextWrapping="Wrap" Height="35" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" FontSize="25.333"/>
-		<ListBox x:Name="Channels" ItemsSource="{Binding Users}" HorizontalAlignment="Left" Margin="0,38,0,0" BorderBrush="{x:Null}" Foreground="Black">
-			<ListBox.Background>
-				<ImageBrush TileMode="Tile" ViewportUnits="Absolute" Viewport="0, 0, 150, 150" ImageSource="pack://siteoforigin:,,,/Resources/noise.png"/>
-			</ListBox.Background>
+		<TextBox x:Name="Hostname" Text="{Binding Hostname}" IsReadOnly="True" TextWrapping="Wrap" Height="35" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" FontSize="25.333" HorizontalAlignment="Right"/>
+		<ListBox x:Name="Channels" ItemsSource="{Binding ShortChannels}" SelectedItem="{Binding SelectedItem}" HorizontalAlignment="Right" Margin="0,35,0,-0.333" BorderBrush="{x:Null}" Foreground="Black" Background="{x:Null}">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Vertical">
+						<TextBlock Text="{Binding Name}"/>
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
 		</ListBox>
 	</Grid>
-
-	<UserControl.DataContext>
-		<local:MainViewModel/>
-	</UserControl.DataContext>
-
 </UserControl>

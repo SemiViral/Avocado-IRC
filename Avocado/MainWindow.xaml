@@ -7,19 +7,26 @@
 		xmlns:m="clr-namespace:Avocado.Model"
 		xmlns:root="clr-namespace:Avocado"
 		mc:Ignorable="d"
-        Title="Avocado IRC" Height="470.156" Width="701.281">
+        Title="Avocado IRC" Height="470.156" Width="1004.554"
+		DataContext="{StaticResource MainViewModel}">
 	<Grid Margin="0,0,3.667,0.667">
-		<ListBox x:Name="ListBoxPrimary" ItemsSource="{Binding Servers}" ItemTemplate="{DynamicResource ServersTemplate}" Foreground="{x:Null}" BorderBrush="{x:Null}" Background="#FF4D4949" Width="200" HorizontalAlignment="Left"/>
-		<TabControl x:Name="TabControlPrimary" ItemsSource="{Binding Servers}" RenderTransformOrigin="0.5,0.5" DockPanel.Dock="Top" Margin="200,0,10,0" Background="#FFFFB5B5" BorderBrush="{x:Null}" Foreground="{x:Null}"/>
+		<ListBox x:Name="ListBoxPrimary" ItemsSource="{Binding Servers}" ItemTemplate="{DynamicResource ServersTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  Foreground="{x:Null}" BorderBrush="{x:Null}" Background="#FF4D4949" HorizontalAlignment="Left"/>
+		<TabControl x:Name="TabControlPrimary" DataContext="{Binding Servers}" ItemsSource="{Binding Channels}" SelectedItem="{Binding SelectedChannel}" ContentTemplate="{DynamicResource ChannelsTemplate}" RenderTransformOrigin="0.5,0.5" DockPanel.Dock="Top" Margin="185,0,10,0" Background="#FFFFB5B5" BorderBrush="{x:Null}" Foreground="{x:Null}">
+			<TabControl.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Name}"/>
+				</DataTemplate>
+			</TabControl.ItemTemplate>
+		</TabControl>
 	</Grid>
-
-	<Window.DataContext>
-		<local:MainViewModel/>
-	</Window.DataContext>
 
 	<Window.Resources>
 		<DataTemplate x:Key="ServersTemplate" DataType="{x:Type root:SelectionListUserControl}">
 			<root:SelectionListUserControl/>
+		</DataTemplate>
+
+		<DataTemplate x:Key="ChannelsTemplate" DataType="{x:Type root:ChannelUserControl}">
+			<root:ChannelUserControl/>
 		</DataTemplate>
 	</Window.Resources>
 </Window>

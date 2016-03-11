@@ -6,11 +6,12 @@ using Avocado.Model;
 
 namespace Avocado.ViewModel {
 	public class ChannelViewModel {
-		public string SendText { get; }
-		public string Name { get; }
+		public string SendText { get; set; }
+		public string Name { get; set; }
 
-		public ObservableCollection<ChannelUser> Users = new ObservableCollection<ChannelUser>(); 
-		public ObservableCollection<Message> Messages = new ObservableCollection<Message>(); 
+		public ObservableCollection<ChannelUser> Users { get; } = new ObservableCollection<ChannelUser>(); 
+		public ObservableCollection<Message> Messages { get; } = new ObservableCollection<Message>(); 
+		public List<Message> TempraryArchive = new List<Message>();
 
 		public event EventHandler<Message> SendMessageEvent;
 

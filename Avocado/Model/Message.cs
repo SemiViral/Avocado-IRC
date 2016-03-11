@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -31,25 +32,28 @@ namespace Avocado.Model {
 			RawMessage = rawData;
 			Parse(RawMessage);
 
-			if (IsRealUser) return;
+			if (IsPing || IsRealUser) return;
 
 			Target = Hostname;
 		}
 
 		public string RawMessage { get; }
+		public string Timestamp { get; } = DateTime.Now.ToShortTimeString();
 		public bool IsRealUser { get; private set; }
+		public bool IsPing { get; private set; }
 
-		public string Nickname { get; private set; }
+
+		public string Nickname { get; set; }
 		public string Realname { get; private set; }
 		public string Hostname { get; private set; }
-		public string Target { get; private set; }
+		public string Target { get; set; }
 		public string Type { get; private set; }
-		public string Args { get; private set; }
+		public string Args { get; set; }
 
 		public List<string> SplitArgs { get; private set; } = new List<string>();
 
 		public void Parse(string rawData) {
-			if (!Regexes.Message.IsMatch(rawData)) return;
+			if (CheckPing() || !Regexes.Message.IsMatch(rawData)) return;
 
 			// begin parsing message into sections
 			Match messageMatch = Regexes.Message.Match(rawData);
@@ -73,6 +77,14 @@ namespace Avocado.Model {
 			Realname = realname.StartsWith("~") ? realname.Substring(1) : realname;
 			Hostname = senderMatch.Groups["Hostname"].Value;
 			IsRealUser = true;
+		}
+
+		private bool CheckPing() {
+			if (!RawMessage.StartsWith("PING")) return false;
+
+			IsPing = true;
+			Args = string.Concat("PONG ", RawMessage.Substring(5));
+			return true;
 		}
 	}
 }

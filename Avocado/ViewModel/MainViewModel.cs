@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 
 namespace Avocado.ViewModel {
@@ -9,12 +10,12 @@ namespace Avocado.ViewModel {
 
 		public static ObservableCollection<ServerViewModel> Servers { get; set; }= new ObservableCollection<ServerViewModel>();
 
+		public MainViewModel() {
+			NewServer("irc.foonetic.net", 6667);
+		}
+
 		public void NewServer(string address, int port) {
-			try {
-				Servers.Add(new ServerViewModel(address, port));
-			} catch (Exception) {
-				MessageBox.Show("Error occured connecting to server!");
-			}
+			Servers.Add(new ServerViewModel(address, port));
 		}
 	}
 }

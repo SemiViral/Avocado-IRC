@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:root="clr-namespace:Avocado"
              xmlns:local="clr-namespace:Avocado.ViewModel"
-             mc:Ignorable="d" Height="88.579" Width="325">
-	<Grid DataContext="{Binding ChannelViewModel}" Margin="0,0,0.333,0.667">
+			 xmlns:m="clr-namespace:Avocado.Model"
+             mc:Ignorable="d">
+	<Grid Margin="0,0,0.333,0.667">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="51*"/>
 			<RowDefinition Height="47*"/>
@@ -19,7 +21,13 @@
 				<KeyBinding Command="{Binding Path=TextBoxSend_KeyUp, UpdateSourceTrigger=PropertyChanged}" Key="Enter"/>
 			</TextBox.InputBindings>
 		</TextBox>
-		<ListBox x:Name="ListBoxMessages" Grid.ColumnSpan="2" Grid.Column="0" Margin="145,0,0.333,26.333" Grid.Row="0" Grid.RowSpan="2"/>
-		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding Users}" HorizontalAlignment="Left" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Width="140" Margin="0,0,0,26"/>
+		<ListBox x:Name="ListBoxMessages" ItemsSource="{Binding Messages}" ItemTemplate="{DynamicResource MessagesTemplate}" Grid.ColumnSpan="2" Grid.Column="0" Margin="145,0,0.333,26.333" Grid.Row="0" Grid.RowSpan="2"/>
+		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding Users}" HorizontalAlignment="Left" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Width="140" Margin="0,0,0,26" BorderBrush="{x:Null}"/>
 	</Grid>
+
+	<UserControl.Resources>
+		<DataTemplate x:Key="MessagesTemplate" DataType="{x:Type root:MessageUserControl}">
+			<root:MessageUserControl/>
+		</DataTemplate>
+	</UserControl.Resources>
 </UserControl>

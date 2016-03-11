@@ -7,14 +7,19 @@
 			 xmlns:local="clr-namespace:Avocado"
              mc:Ignorable="d" d:DesignWidth="300" VerticalAlignment="Bottom">
 	<Grid>
-		<Label x:Name="Nickname" Content="Nickname&#xD;&#xA;" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Foreground="#FF5AFF1C"/>
-		<Label x:Name="Timestamp" Content="Timestamp" HorizontalAlignment="Left" Margin="68,0,0,0" VerticalAlignment="Top" Foreground="#FF00B4E4"/>
-		<TextBox x:Name="MessageDisplay" Text="{Binding Args}" Height="23" Margin="0,26,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="0*"/>
+			<RowDefinition/>
+			<RowDefinition Height="0*"/>
+		</Grid.RowDefinitions>
+		<Label x:Name="Nickname" Content="{Binding Nickname, FallbackValue=Nickname}" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF5AFF1C" Grid.RowSpan="2" Margin="0,1,0,0" Height="27" Width="63"/>
+		<Label x:Name="Timestamp" Content="{Binding Timestamp, FallbackValue=Timestamp}" HorizontalAlignment="Right" Margin="0,5,188,0" VerticalAlignment="Top" Foreground="#FF31464C" Grid.Row="1" Background="{x:Null}" FontSize="8"/>
+		<TextBox x:Name="MessageDisplay" Text="{Binding Args}" IsReadOnly="True" TextWrapping="Wrap" Grid.Row="1" Margin="0,26,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Height="20" VerticalAlignment="Top"/>
 	</Grid>
 
 	<UserControl.Resources>
-		<!--<DataTemplate x:Key="MessageTemplate" DataType="{x:Type m:Message}">
-			<local:M/>
-		</DataTemplate>-->
+		<DataTemplate x:Key="MessageTemplate" DataType="{x:Type m:Message}">
+			<local:MessageUserControl/>
+		</DataTemplate>
 	</UserControl.Resources>
 </UserControl>

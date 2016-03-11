@@ -2,8 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Avocado.ViewModel"
-             StartupUri="MainWindow.xaml">
+             StartupUri="MainWindow.xaml"
+			 ShutdownMode="OnExplicitShutdown">
 	<Application.Resources>
-		<SolidColorBrush x:Key="Brush1" Color="White"/>
+		<local:MainViewModel x:Key="MainViewModel"/>
 	</Application.Resources>
 </Application>
