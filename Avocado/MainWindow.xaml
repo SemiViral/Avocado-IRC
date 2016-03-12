@@ -8,11 +8,11 @@
 		xmlns:root="clr-namespace:Avocado"
 		mc:Ignorable="d"
 		Title="Avocado IRC" Height="470.156" Width="1004.554"
-		DataContext="{StaticResource MainViewModel}">
+		DataContext="{StaticResource MainViewModel}" Foreground="{x:Null}" Background="#FF252525">
 	<DockPanel Margin="0">
 		<ListBox x:Name="ListBoxPrimary" ItemsSource="{Binding Servers}" ItemTemplate="{DynamicResource ServersTemplate}"
 				 ScrollViewer.HorizontalScrollBarVisibility="Disabled" Foreground="{x:Null}" BorderBrush="{x:Null}"
-				 Background="#FF252525" HorizontalAlignment="Left" Margin="0" Padding="0"/>
+				 Background="{x:Null}" HorizontalAlignment="Left" Margin="0" Padding="0" BorderThickness="0" />
 		<TabControl x:Name="TabControlPrimary" DataContext="{Binding Servers}" ItemsSource="{Binding Channels}"
 					SelectedItem="{Binding SelectedChannel}" ContentTemplate="{DynamicResource ChannelsTemplate}"
 					Margin="0" Padding="0" Background="#FF595959" BorderBrush="{x:Null}"

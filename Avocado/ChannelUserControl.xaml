@@ -5,22 +5,32 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:root="clr-namespace:Avocado"
 			 xmlns:local="clr-namespace:Avocado.ViewModel"
+			 xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
 			 xmlns:m="clr-namespace:Avocado.Model"
 			 mc:Ignorable="d">
 	<DockPanel>
-		<TextBox x:Name="TextBoxSend" Text="{Binding SendText, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0.333,1"
-				 TextWrapping="Wrap" Height="21"
-				 VerticalAlignment="Bottom" DockPanel.Dock="Bottom">
+		<TextBox x:Name="TextBoxSend" Text="{Binding SendText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"
+				 TextWrapping="Wrap" Height="Auto" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+				 VerticalScrollBarVisibility="Auto" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" MaxLength="510">
 			<TextBox.InputBindings>
-				<KeyBinding Key="Enter" Command="{Binding TextBoxSend_KeyUp}"/>
+				<KeyBinding Key="Enter" Command="{Binding KeyUp_Enter_Command}" />
 			</TextBox.InputBindings>
 		</TextBox>
-		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding Users}" HorizontalAlignment="Left" Width="200" Margin="0,0,5,5"
+		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding Users}" HorizontalAlignment="Left" Margin="0,0,5,0"
 				 BorderBrush="{x:Null}"
-				 Visibility="{Binding HasItems, RelativeSource={RelativeSource Self}, Converter={StaticResource BooleanToVisiblity}}" />
+				 Visibility="{Binding HasItems, RelativeSource={RelativeSource Self}, Converter={StaticResource BooleanToVisiblity}}">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="{Binding Name}" />
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
 		<ListBox x:Name="ListBoxMessages" ItemsSource="{Binding Messages}" ItemTemplate="{DynamicResource MessagesTemplate}"
-				 Margin="0,0,0,5" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Top"
-				 HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+				 Margin="0" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Top"
+				 HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+				 m:ListBoxBehaviour.ScrollOnNewItem="True"/>
 	</DockPanel>
 
 	<UserControl.Resources>

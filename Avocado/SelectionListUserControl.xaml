@@ -8,18 +8,18 @@
 			 xmlns:m="clr-namespace:Avocado.Model"
 			 mc:Ignorable="d">
 	<DockPanel Background="{x:Null}">
-		<TextBlock x:Name="Hostname" Text="{Binding Hostname, FallbackValue=Address}"
-				   TextWrapping="Wrap" Padding="0, 0, 0, 35" VerticalAlignment="Top"
-				   TextAlignment="Right"
-				   FontSize="25.333"
+		<!--<TextBlock x:Name="Hostname" Text="{Binding Hostname, FallbackValue=Address}"
+				   TextWrapping="Wrap" Padding="30, 0, 5, 35" VerticalAlignment="Top"
+				   TextAlignment="Right" Focusable="True"
+				   FontSize="25"
 				   HorizontalAlignment="Right" Background="#FF595959" Foreground="#FF131313" DockPanel.Dock="Top" Height="35" Cursor="Arrow">
 			<TextBlock.Resources>
-				<Style TargetType="{x:Type ListBoxItem}">
+				<Style TargetType="{x:Type ListViewItem}">
 					<Setter Property="IsSelected" Value="{Binding HostIsSelected}" />
 				</Style>
 			</TextBlock.Resources>
-		</TextBlock>
-		<ListBox x:Name="Channels" ItemsSource="{Binding ShortChannels}" SelectedItem="{Binding SelectedChannel}" Margin="0" BorderBrush="{x:Null}" Foreground="Black" Background="{x:Null}" DockPanel.Dock="Right">
+		</TextBlock>-->
+		<ListBox x:Name="Channels" ItemsSource="{Binding Channels}" SelectedItem="{Binding SelectedChannel}" Margin="0" BorderBrush="{x:Null}" Foreground="Black" Background="{x:Null}" DockPanel.Dock="Right">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<StackPanel Orientation="Vertical">

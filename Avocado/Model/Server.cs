@@ -62,20 +62,19 @@ namespace Avocado.Model {
 						continue;
 					}
 
-					Debug.WriteLine(data);
 					MessageRecieved?.Invoke(this, new Message(data));
 				}
 			}
 		}
 
 		public void Write(Message message) {
-			Debug.WriteLine(message.RawMessage);
+			Debug.WriteLine(message.RawMessage, "Input");
 			_writer.WriteLine(message.RawMessage);
 			_writer.Flush();
 		}
 
 		public void Write(string message) {
-			Debug.WriteLine(message);
+			Debug.WriteLine(message, "Input");
 			_writer.WriteLine(message);
 			_writer.Flush();
 		}

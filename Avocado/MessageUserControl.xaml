@@ -18,12 +18,12 @@
 			<TextBlock x:Name="TextBlockTimeStamp" Text="{Binding Timestamp, FallbackValue=Timestamp}" TextWrapping="Wrap"
 					   VerticalAlignment="Center" Foreground="#FF1E3C3F" Margin="4,2.5,0,0" HorizontalAlignment="Left" />
 		</DockPanel>
-		<TextBox x:Name="MessageDisplay" Text="{Binding Args}" TextWrapping="Wrap" IsReadOnly="True" Grid.Row="1"
+		<TextBox x:Name="MessageDisplay" Text="{Binding Message, Mode=OneWay}" TextWrapping="Wrap" IsReadOnly="True" Grid.Row="1"
 				 Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" Margin="0,25,0,0" />
 	</Grid>
 
 	<UserControl.Resources>
-		<DataTemplate x:Key="MessageTemplate" DataType="{x:Type m:Message}">
+		<DataTemplate x:Key="MessageTemplate" DataType="{x:Type m:DisplayableMessage}">
 			<local:MessageUserControl />
 		</DataTemplate>
 	</UserControl.Resources>
