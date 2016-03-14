@@ -11,13 +11,15 @@
 	<DockPanel>
 		<TextBox x:Name="TextBoxSend" Text="{Binding SendText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"
 				 TextWrapping="Wrap" Height="Auto" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-				 VerticalScrollBarVisibility="Auto" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" MaxLength="510">
+				 VerticalScrollBarVisibility="Auto" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" MaxLength="510" MaxLines="4">
 			<TextBox.InputBindings>
 				<KeyBinding Key="Enter" Command="{Binding KeyUp_Enter_Command}" />
+				<KeyBinding Key="Enter" Modifiers="Shift" Command="{Binding KeyUp_Enter_Command}" />
 			</TextBox.InputBindings>
 		</TextBox>
+		
 		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding Users}" HorizontalAlignment="Left" Margin="0,0,5,0"
-				 BorderBrush="{x:Null}"
+				 BorderBrush="{x:Null}" 
 				 Visibility="{Binding HasItems, RelativeSource={RelativeSource Self}, Converter={StaticResource BooleanToVisiblity}}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
@@ -27,15 +29,32 @@
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-		<ListBox x:Name="ListBoxMessages" ItemsSource="{Binding Messages}" ItemTemplate="{DynamicResource MessagesTemplate}"
+		<ListBox x:Name="ListBoxMessages" ItemsSource="{Binding Messages}" ItemTemplate="{StaticResource MessagesTemplate}"
 				 Margin="0" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Top"
 				 HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-				 m:ListBoxBehaviour.ScrollOnNewItem="True"/>
+				 m:ListBoxBehaviour.ScrollOnNewItem="True">
+			<!--<ListBox.Style>
+				<Style>
+					<Setter Property="ListBox.ItemsSource" Value="{Binding Messages}" />
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding IsPrivate}" Value="True">
+							<Setter Property="ListBox.ItemsSource" Value="{Binding SimpleMessages}" />
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</ListBox.Style>
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<DataTemplate.Triggers>
+						<DataTrigger Binding="{Binding IsPrivate, RelativeSource={RelativeSource AncestorType=local:ChannelViewModel}}" Value="True">
+							<Setter Property="ListBox.ItemTemplate" Value="{DynamicResource SimpleMessageTemplate}" />
+						</DataTrigger>
+						<DataTrigger Binding="{Binding IsPrivate, RelativeSource={RelativeSource AncestorType=root:ChannelUserControl}}" Value="False">
+							<Setter Property="ListBox.ItemTemplate" Value="{DynamicResource MessagesTemplate}" />
+						</DataTrigger>
+					</DataTemplate.Triggers>
+				</DataTemplate>
+			</ListBox.ItemTemplate>-->
+		</ListBox>
 	</DockPanel>
-
-	<UserControl.Resources>
-		<DataTemplate x:Key="MessagesTemplate" DataType="{x:Type root:MessageUserControl}">
-			<root:MessageUserControl />
-		</DataTemplate>
-	</UserControl.Resources>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -38,7 +39,7 @@ namespace Avocado.Model {
 		}
 
 		public string RawMessage { get; }
-		public string Timestamp { get; } = string.Concat("at ", DateTime.Now.ToShortTimeString());
+		public string Timestamp { get; } = DateTime.Now.ToString(CultureInfo.CurrentCulture);
 		public bool IsRealUser { get; private set; }
 		public bool IsPing { get; private set; }
 

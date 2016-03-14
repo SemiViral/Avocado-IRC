@@ -10,22 +10,22 @@ using Avocado.Model;
 
 namespace Avocado.ViewModel {
 	public class ChannelViewModel : INotifyPropertyChanged {
+		private readonly List<string> _pastInputs = new List<string>();
 		private ICommand _keyUpCommand;
-
 		private string _sendText;
 		public List<Message> TempraryArchive = new List<Message>();
 
 		public ChannelViewModel(string name) {
 			Name = name;
-			_users.CollectionChanged += OnUsersAddedSort;
+
+			if (Name.StartsWith("#"))
+				_users.CollectionChanged += OnUsersAddedSort;
+			else IsPrivate = true;
 
 			Debug.WriteLine($"Channel {Name} created", "Information");
 		}
 
-		private void OnUsersAddedSort(object sender, NotifyCollectionChangedEventArgs e) {
-			Users = new ObservableCollection<ChannelUser>(_users.OrderBy(user => user.AccessLevel));
-
-		}
+		public bool IsPrivate { get; }
 
 		public string SendText {
 			get { return _sendText; }
@@ -39,25 +39,29 @@ namespace Avocado.ViewModel {
 
 		public string Name { get; set; }
 
-		private List<string> PastInputs = new List<string>(); 
-
-		public ObservableCollection<ChannelUser> _users { get; }= new ObservableCollection<ChannelUser>();  
+		public ObservableCollection<ChannelUser> _users { get; } = new ObservableCollection<ChannelUser>();
 		public ObservableCollection<ChannelUser> Users { get; private set; } = new ObservableCollection<ChannelUser>();
 		public ObservableCollection<DisplayableMessage> Messages { get; } = new ObservableCollection<DisplayableMessage>();
+		public ObservableCollection<string> SimpleMessages { get; } = new ObservableCollection<string>();
 
 		public ICommand KeyUp_Enter_Command {
 			get {
 				return _keyUpCommand ?? (_keyUpCommand = new ActionCommand(() => {
-					if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)) return;
+					if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)) {
+						SendText += '\n';
+						return;
+					}
 
-					string sendString;
+					if (string.IsNullOrEmpty(SendText)) return;
 
 					if (SendText.StartsWith("/")) {
-						string[] splitText = SendText.Split(new[] {' '}, 2);
-						SendMessageEvent?.Invoke(this, new Message(splitText[0].Substring(1).ToUpper(), splitText[1]));
+						List<string> splitText = SendText.Split(new[] {' '}, 2).ToList();
+
+						SendMessageEvent?.Invoke(this, new Message(splitText[0].Substring(1).ToUpper(), splitText[1] ?? string.Empty));
 					} else {
 						SendMessageEvent?.Invoke(this, new Message("PRIVMSG", Name, string.Concat(SendText, "\r\n")));
 						Messages.Add(new DisplayableMessage(MainViewModel.Nickname, Name, SendText));
+						_pastInputs.Add(SendText);
 					}
 
 					SendText = string.Empty;
@@ -67,10 +71,18 @@ namespace Avocado.ViewModel {
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
+		private void OnUsersAddedSort(object sender, NotifyCollectionChangedEventArgs e) {
+			Users = new ObservableCollection<ChannelUser>(_users.OrderBy(user => user.AccessLevel));
+		}
+
 		public event EventHandler<Message> SendMessageEvent;
 
 		public void AppendMessage(DisplayableMessage message) {
-			Messages.Add(message);
+			// todo if (IsPrivate) {
+			//	SimpleMessages.Add(message.Formatted);
+			//} else {
+				Messages.Add(message);
+			//}
 		}
 
 		public void AddUser(string name) {
