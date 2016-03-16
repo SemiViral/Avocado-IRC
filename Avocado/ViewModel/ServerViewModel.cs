@@ -86,8 +86,8 @@ namespace Avocado.ViewModel {
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public void PreConnect() {
-			Connection.Write(new Message("USER", $"{MainViewModel.Nickname} 0 * {MainViewModel.Realname}"));
-			Connection.Write(new Message("NICK", MainViewModel.Nickname));
+			Connection.Write(new OutputMessage("USER", $"{MainViewModel.Nickname} 0 * {MainViewModel.Realname}"));
+			Connection.Write(new OutputMessage("NICK", MainViewModel.Nickname));
 		}
 
 		public void CreateChannel(string name) {
@@ -108,6 +108,7 @@ namespace Avocado.ViewModel {
 			if (!GetHost(hostname).Equals(GetHost(Hostname))) return;
 
 			GetChannel(Hostname).Name = hostname;
+			Connection.Address = hostname;
 			Hostname = hostname;
 		}
 
@@ -119,19 +120,19 @@ namespace Avocado.ViewModel {
 		}
 
 		// this was a grand waste of time...
-		//public bool IsIrrelevantMessage(Message message) {
-		//	if (message.Target.Equals(MainViewModel.Nickname)) {
-		//		message.Target = Hostname;
+		//public bool IsIrrelevantMessage(Message Args) {
+		//	if (Args.Target.Equals(MainViewModel.Nickname)) {
+		//		Args.Target = Hostname;
 		//		return true;
 		//	}
 
-		//	if (message.IsRealUser) return false;
-		//	if (string.IsNullOrEmpty(message.Nickname) ||
-		//		!IrrelevantNicknames.Contains(message.Nickname)) return false;
-		//	if (!string.IsNullOrEmpty(message.Target) &&
+		//	if (Args.IsRealUser) return false;
+		//	if (string.IsNullOrEmpty(Args.Nickname) ||
+		//		!IrrelevantNicknames.Contains(Args.Nickname)) return false;
+		//	if (!string.IsNullOrEmpty(Args.Target) &&
 		//		Channels.Any(chan => IrrelevantNicknames.Contains(chan.Name))) return false;
 
-		//	message.Target = Hostname;
+		//	Args.Target = Hostname;
 		//	return true;
 		//}
 
@@ -142,15 +143,13 @@ namespace Avocado.ViewModel {
 			else Application.Current.Dispatcher?.Invoke(DispatcherPriority.Normal, action);
 		}
 
-		public void DisplayMessage(DisplayableMessage message) {
-			if (message == null ||
-				!message.DoDisplay ||
-				string.IsNullOrEmpty(message.Message)) return;
+		public void DisplayMessage(Message message) {
+			if (string.IsNullOrEmpty(message?.Args)) return;
 
-			GetChannel(message.TargetTab).AppendMessage(message);
+			GetChannel(message.Target).AppendMessage(message);
 		}
 
-		private void OnMessageRecieved(Message message) {
+		private void OnMessageRecieved(ChannelMessage message) {
 			if (message.IsPing) {
 				Connection.Write(message.Args);
 				return;
@@ -163,7 +162,7 @@ namespace Avocado.ViewModel {
 			DisplayMessage(ProcessMessage(message));
 		}
 
-		private void SendMessageOnEvent(object sender, Message message) {
+		private void SendMessageOnEvent(object sender, OutputMessage message) {
 			Connection.Write(message);
 		}
 
@@ -171,16 +170,16 @@ namespace Avocado.ViewModel {
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
 		}
 
-		public DisplayableMessage ProcessMessage(Message message) {
+		public Message ProcessMessage(ChannelMessage message) {
 			switch (message.Type) {
 				case "NOTICE":
-					return new DisplayableMessage(Hostname, Hostname, message.Args);
+					return new Message(Hostname, Hostname, message.Args);
 				case "MODE":
 					if (!IsVerified) IsVerified = !IsVerified;
-					return new DisplayableMessage(message.Nickname,
+					return new Message(message.Nickname,
 						IrrelevantNicknames.Contains(message.Nickname) ? Hostname : message.Target, message.Args);
 				case "PART":
-					if (message.Target.StartsWith("#")) Channels.Remove(GetChannel(message.Target));
+					if (message.Target.StartsWith("#") && GetChannel(message.Target) != null) Channels.Remove(GetChannel(message.Target));
 					break;
 				case "353": // names reply
 					message.Target = message.SplitArgs[1]; // SplitArgs[1] is the targeted channel in this instance
@@ -190,14 +189,14 @@ namespace Avocado.ViewModel {
 						channel.AddUser(s);
 					}
 
-					return new DisplayableMessage(message.Target, message.Target,
+					return new Message(message.Target, message.Target,
 						string.Concat("Users in this channel: ", string.Join(", ", channel.Users.Select(user => user.Name).ToList())));
 				case "366": // end of names reply
 					// in this instance, SplitArgs[0] is the target channel
 					SelectedChannel = GetChannel(message.SplitArgs[0]);
 					break;
 				default:
-					return new DisplayableMessage(message);
+					return new Message(message.Nickname, message.Target, message.Args);
 			}
 
 			return null;

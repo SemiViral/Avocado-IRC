@@ -41,8 +41,7 @@ namespace Avocado.ViewModel {
 
 		public ObservableCollection<ChannelUser> _users { get; } = new ObservableCollection<ChannelUser>();
 		public ObservableCollection<ChannelUser> Users { get; private set; } = new ObservableCollection<ChannelUser>();
-		public ObservableCollection<DisplayableMessage> Messages { get; } = new ObservableCollection<DisplayableMessage>();
-		public ObservableCollection<string> SimpleMessages { get; } = new ObservableCollection<string>();
+		public ObservableCollection<Message> Messages { get; } = new ObservableCollection<Message>();
 
 		public ICommand KeyUp_Enter_Command {
 			get {
@@ -57,10 +56,10 @@ namespace Avocado.ViewModel {
 					if (SendText.StartsWith("/")) {
 						List<string> splitText = SendText.Split(new[] {' '}, 2).ToList();
 
-						SendMessageEvent?.Invoke(this, new Message(splitText[0].Substring(1).ToUpper(), splitText[1] ?? string.Empty));
+						SendMessageEvent?.Invoke(this, new OutputMessage(splitText[0].Substring(1).ToUpper(), splitText[1] ?? string.Empty));
 					} else {
-						SendMessageEvent?.Invoke(this, new Message("PRIVMSG", Name, string.Concat(SendText, "\r\n")));
-						Messages.Add(new DisplayableMessage(MainViewModel.Nickname, Name, SendText));
+						SendMessageEvent?.Invoke(this, new OutputMessage("PRIVMSG", Name, string.Concat(SendText, "\r\n")));
+						Messages.Add(new Message(MainViewModel.Nickname, Name, SendText));
 						_pastInputs.Add(SendText);
 					}
 
@@ -75,14 +74,10 @@ namespace Avocado.ViewModel {
 			Users = new ObservableCollection<ChannelUser>(_users.OrderBy(user => user.AccessLevel));
 		}
 
-		public event EventHandler<Message> SendMessageEvent;
+		public event EventHandler<OutputMessage> SendMessageEvent;
 
-		public void AppendMessage(DisplayableMessage message) {
-			if (IsPrivate) {
-				SimpleMessages.Add(message.Formatted);
-			} else {
-				Messages.Add(message);
-			}
+		public void AppendMessage(Message message) {
+			Messages.Add(message);
 		}
 
 		public void AddUser(string name) {

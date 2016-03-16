@@ -51,10 +51,8 @@
 			<root:MessageUserControl />
 		</DataTemplate>
 
-		<DataTemplate x:Key="SimpleMessageTemplate">
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="{Binding}"/>
-			</StackPanel>
+		<DataTemplate x:Key="SimpleMessageTemplate" DataType="{x:Type root:SimpleMessageUserControl}">
+			<root:SimpleMessageUserControl/>
 		</DataTemplate>
 	</Application.Resources>
 </Application>

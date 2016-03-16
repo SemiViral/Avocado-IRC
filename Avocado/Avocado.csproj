@@ -56,14 +56,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="MessageUserControl.xaml.cs">
-      <DependentUpon>MessageUserControl.xaml</DependentUpon>
+    <Compile Include="ChannelMessageUserControl.xaml.cs">
+      <DependentUpon>ChannelMessageUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\ActionCommand.cs" />
-    <Compile Include="Model\DisplayableMessage.cs" />
+    <Compile Include="Model\ErrorMessage.cs" />
     <Compile Include="Model\ListBoxBehaviour.cs" />
-    <Compile Include="Model\Server.cs" />
     <Compile Include="Model\Message.cs" />
+    <Compile Include="Model\OutputMessage.cs" />
+    <Compile Include="Model\Server.cs" />
+    <Compile Include="Model\ChannelMessage.cs" />
     <Compile Include="Model\ChannelUser.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -76,6 +78,9 @@
     </Compile>
     <Compile Include="SelectionListUserControl.xaml.cs">
       <DependentUpon>SelectionListUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SimpleMessageUserControl.xaml.cs">
+      <DependentUpon>SimpleMessageUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\ChannelViewModel.cs" />
     <Page Include="MainWindow.xaml">
@@ -92,7 +97,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MessageUserControl.xaml">
+    <Page Include="ChannelMessageUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -101,6 +106,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelectionListUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SimpleMessageUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

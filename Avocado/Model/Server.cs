@@ -13,8 +13,14 @@ namespace Avocado.Model {
 		private TcpClient _tcp;
 		private StreamWriter _writer;
 
+		public string Address { get; set; }
+		public int Port { get; set; }
+
 		public Server(string address, int port) {
 			Connect(address, port);
+
+			Address = address;
+			Port = port;
 
 			ShouldListen = true;
 		}
@@ -26,7 +32,7 @@ namespace Avocado.Model {
 			GC.SuppressFinalize(this);
 		}
 
-		public event EventHandler<Message> MessageRecieved;
+		public event EventHandler<ChannelMessage> MessageRecieved;
 
 		protected virtual void Dispose(bool dispose) {
 			if (!dispose || _disposed) return;
@@ -57,12 +63,13 @@ namespace Avocado.Model {
 					string data = _reader.ReadLine();
 
 					if (string.IsNullOrEmpty(data)) {
-						MessageRecieved?.Invoke(this, new Message("PRIVMSG", "Server disconnected."));
+						//MessageRecieved?.Invoke(this, new ErrorMessage(Address, "Server disconnected."));
+						MessageBox.Show($"Server {Address} disconnected.");
 						ShouldListen = false;
 						continue;
 					}
 
-					MessageRecieved?.Invoke(this, new Message(data));
+					MessageRecieved?.Invoke(this, new ChannelMessage(data));
 				}
 			}
 		}
