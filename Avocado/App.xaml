@@ -47,7 +47,7 @@
 			</Setter>
 		</Style>
 
-		<DataTemplate x:Key="MessagesTemplate" DataType="{x:Type root:MessageUserControl}">
+		<DataTemplate x:Key="MessageTemplate" DataType="{x:Type root:MessageUserControl}">
 			<root:MessageUserControl />
 		</DataTemplate>
 

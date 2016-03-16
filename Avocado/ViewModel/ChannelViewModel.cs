@@ -78,11 +78,11 @@ namespace Avocado.ViewModel {
 		public event EventHandler<Message> SendMessageEvent;
 
 		public void AppendMessage(DisplayableMessage message) {
-			// todo if (IsPrivate) {
-			//	SimpleMessages.Add(message.Formatted);
-			//} else {
+			if (IsPrivate) {
+				SimpleMessages.Add(message.Formatted);
+			} else {
 				Messages.Add(message);
-			//}
+			}
 		}
 
 		public void AddUser(string name) {
