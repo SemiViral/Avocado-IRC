@@ -6,14 +6,14 @@
 			 xmlns:m="clr-namespace:Avocado.Model"
 			 xmlns:local="clr-namespace:Avocado"
 			 mc:Ignorable="d" d:DesignWidth="300" VerticalAlignment="Bottom">
-	<DockPanel>
+	<DockPanel DataContext="{Binding Messages}">
 		<DockPanel LastChildFill="False" VerticalAlignment="Top" HorizontalAlignment="Left" DockPanel.Dock="Top">
 			<TextBlock x:Name="Nickname" Text="{Binding Nickname, FallbackValue=Nickname}" HorizontalAlignment="Left"
 					   VerticalAlignment="Center" Foreground="#FF979797" DockPanel.Dock="Left" Margin="2" />
-			<TextBlock x:Name="TextBlockTimeStamp" Text="{Binding Timestamp, FallbackValue=Timestamp}" TextWrapping="Wrap"
+			<TextBlock x:Name="Timestamp" Text="{Binding Timestamp, FallbackValue=Timestamp}" TextWrapping="Wrap"
 					   VerticalAlignment="Center" Foreground="#FF1E3C3F" Margin="4,2.5,0,0" HorizontalAlignment="Left" FontSize="8" />
 		</DockPanel>
-		<TextBox x:Name="MessageDisplay" Text="{Binding Args, Mode=OneWay}" TextWrapping="Wrap" IsReadOnly="True"
+		<TextBox x:Name="MessageDisplay" Text="{Binding Args, FallbackValue=Message, Mode=OneWay}" TextWrapping="Wrap" IsReadOnly="True"
 				 Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" Margin="0" DockPanel.Dock="Bottom" />
 	</DockPanel>
 </UserControl>

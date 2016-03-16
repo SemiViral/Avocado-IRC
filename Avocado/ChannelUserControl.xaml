@@ -37,7 +37,7 @@
 
 	<UserControl.Resources>
 		<DataTemplate x:Key="ListBoxMessagesTemplate" DataType="{x:Type local:ChannelViewModel}">
-			<ContentControl Content="{Binding}">
+			<ContentControl DataContext="{Binding DataContext, ElementName=ListBoxMessages}" Content="{Binding}">
 				<ContentControl.Style>
 					<Style TargetType="{x:Type ContentControl}">
 						<Setter Property="ContentTemplate" Value="{StaticResource MessageTemplate}" />

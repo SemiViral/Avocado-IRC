@@ -77,6 +77,7 @@ namespace Avocado.ViewModel {
 		public event EventHandler<OutputMessage> SendMessageEvent;
 
 		public void AppendMessage(Message message) {
+			Debug.WriteLine(message.Args);
 			Messages.Add(message);
 		}
 

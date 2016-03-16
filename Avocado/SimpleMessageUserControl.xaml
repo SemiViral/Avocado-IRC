@@ -10,13 +10,13 @@
 			<ColumnDefinition/>
 			<ColumnDefinition Width="0*"/>
 		</Grid.ColumnDefinitions>
-		<DockPanel LastChildFill="False" Margin="0,0,0.333,0">
-			<TextBlock x:Name="TextBlockTimestamp" TextWrapping="Wrap" Text="{Binding Timestamp, FallbackValue=Timestamp}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,6,0"/>
-			<TextBlock x:Name="TextBlockNickname" TextWrapping="Wrap" Text="{Binding Nickname, FallbackValue=Nickname}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,3,0"/>
+		<DockPanel DataContext="{Binding Messages}" LastChildFill="False" Margin="0,0,0.333,0">
+			<TextBlock x:Name="Timestamp" TextWrapping="Wrap" Text="{Binding Timestamp, FallbackValue=Timestamp}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,6,0"/>
+			<TextBlock x:Name="Nickname" TextWrapping="Wrap" Text="{Binding Nickname, FallbackValue=Nickname}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,3,0"/>
 			<StackPanel Orientation="Horizontal">
-				<Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Width="2" />
+				<Separator BorderThickness="0, 0, 1, 0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="2,-2" BorderBrush="#FF555555" Background="#FFB7B7B7" Width="3" />
 			</StackPanel>
-			<TextBlock x:Name="TextBlockArgs" Margin="3,0,0,0" TextWrapping="Wrap" Text="{Binding Args, FallbackValue=Message}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+			<TextBlock x:Name="Args" Margin="3,2,0,2" TextWrapping="Wrap" Text="{Binding Args, FallbackValue=Message, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 		</DockPanel>
 
 	</Grid>
