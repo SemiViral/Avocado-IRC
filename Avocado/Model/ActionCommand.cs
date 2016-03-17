@@ -2,21 +2,21 @@
 using System.Windows.Input;
 
 namespace Avocado.Model {
-	internal class ActionCommand : ICommand {
-		private readonly Action _action;
+    internal class ActionCommand : ICommand {
+        private readonly Action _action;
 
-		public ActionCommand(Action action) {
-			_action = action;
-		}
+        public ActionCommand(Action action) {
+            _action = action;
+        }
 
-		public bool CanExecute(object parameter) {
-			return true;
-		}
+        public bool CanExecute(object parameter) {
+            return true;
+        }
 
-		public void Execute(object parameter) {
-			_action();
-		}
+        public void Execute(object parameter) {
+            _action();
+        }
 
-		public event EventHandler CanExecuteChanged;
-	}
+        public event EventHandler CanExecuteChanged;
+    }
 }

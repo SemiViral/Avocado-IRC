@@ -19,7 +19,8 @@
 				</Style>
 			</TextBlock.Resources>
 		</TextBlock>-->
-		<ListBox x:Name="Channels" ItemsSource="{Binding Channels}" SelectedItem="{Binding SelectedChannel}" Margin="0" BorderBrush="{x:Null}" Foreground="#FFC1C1C1" Background="{x:Null}" DockPanel.Dock="Right">
+		<ListBox x:Name="Channels" ItemsSource="{Binding Channels}" SelectedItem="{Binding SelectedChannel}" Margin="0"
+				 BorderBrush="{x:Null}" Foreground="#FFC1C1C1" Background="{x:Null}" DockPanel.Dock="Right">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<StackPanel Orientation="Vertical">

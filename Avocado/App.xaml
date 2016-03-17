@@ -52,7 +52,7 @@
 		</DataTemplate>
 
 		<DataTemplate x:Key="SimpleMessageTemplate" DataType="{x:Type root:SimpleMessageUserControl}">
-			<root:SimpleMessageUserControl/>
+			<root:SimpleMessageUserControl />
 		</DataTemplate>
 	</Application.Resources>
 </Application>

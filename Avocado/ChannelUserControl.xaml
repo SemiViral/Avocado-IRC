@@ -17,9 +17,9 @@
 				<KeyBinding Key="Enter" Modifiers="Shift" Command="{Binding KeyUp_Enter_Command}" />
 			</TextBox.InputBindings>
 		</TextBox>
-		
+
 		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding Users}" HorizontalAlignment="Left" Margin="0,0,5,0"
-				 BorderBrush="{x:Null}" 
+				 BorderBrush="{x:Null}"
 				 Visibility="{Binding HasItems, RelativeSource={RelativeSource Self}, Converter={StaticResource BooleanToVisiblity}}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
@@ -29,10 +29,11 @@
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-		<ListBox x:Name="ListBoxMessages" ItemsSource="{Binding Messages}" ItemTemplate="{DynamicResource ListBoxMessagesTemplate}"
+		<ListBox x:Name="ListBoxMessages" ItemsSource="{Binding Messages}"
+				 ItemTemplate="{DynamicResource ListBoxMessagesTemplate}"
 				 Margin="0" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Top"
 				 HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-				 m:ListBoxBehaviour.ScrollOnNewItem="True"/>
+				 m:ListBoxBehaviour.ScrollOnNewItem="True" />
 	</DockPanel>
 
 	<UserControl.Resources>
