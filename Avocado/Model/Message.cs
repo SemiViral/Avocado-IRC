@@ -1,6 +1,8 @@
 ﻿using System;
 
 namespace Avocado.Model {
+    public delegate void MessageEventHandler(object sender, Message e);
+
     public class Message {
         protected Message() {}
 

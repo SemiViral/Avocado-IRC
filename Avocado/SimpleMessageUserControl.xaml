@@ -5,24 +5,14 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:local="clr-namespace:Avocado"
 			 mc:Ignorable="d">
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition />
-			<ColumnDefinition Width="0*" />
-		</Grid.ColumnDefinitions>
-		<DockPanel DataContext="{Binding Messages}" LastChildFill="False" Margin="0,0,0,0">
-			<TextBlock x:Name="Timestamp" TextWrapping="Wrap" Text="{Binding Timestamp, FallbackValue=Timestamp}"
-					   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="Red" />
-			<TextBlock x:Name="Nickname" TextWrapping="Wrap" Text="{Binding Nickname, FallbackValue=Nickname}"
-					   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,3,0" Foreground="Red" />
-			<StackPanel Orientation="Horizontal">
-				<Separator BorderThickness="0, 0, 1, 0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="2,-2"
-						   BorderBrush="#FF555555" Background="#FFB7B7B7" Width="3" />
-			</StackPanel>
-			<TextBlock x:Name="Args" Margin="3,2,0,2" TextWrapping="Wrap"
-					   Text="{Binding Args, FallbackValue=Message, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"
-					   Foreground="Red" />
-		</DockPanel>
-
-	</Grid>
+	<DockPanel Margin="0">
+		<TextBlock x:Name="Timestamp" TextWrapping="Wrap" Text="{Binding Timestamp, FallbackValue=Timestamp}"
+				   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,0,6,0" Foreground="{StaticResource GrayBrush3}" />
+		<TextBlock x:Name="Nickname" TextWrapping="Wrap" Text="{Binding Nickname, FallbackValue=Nickname}"
+				   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,3,0"
+				   Foreground="{StaticResource AccentColorBrush}" />
+		<TextBlock x:Name="Args" Margin="0,0,0,0" TextWrapping="Wrap"
+				   Text="{Binding Args, FallbackValue=Message, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top"
+				   Foreground="{StaticResource GrayBrush4}" />
+	</DockPanel>
 </UserControl>

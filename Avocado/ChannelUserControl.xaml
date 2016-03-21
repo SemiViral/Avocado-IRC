@@ -6,11 +6,15 @@
 			 xmlns:root="clr-namespace:Avocado"
 			 xmlns:local="clr-namespace:Avocado.ViewModel"
 			 xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+			 xmlns:model="clr-namespace:Avocado.Model"
 			 xmlns:m="clr-namespace:Avocado.Model"
+			 xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
 			 mc:Ignorable="d">
-	<DockPanel>
-		<TextBox x:Name="TextBoxSend" Text="{Binding SendText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"
+	<DockPanel Margin="0">
+		<TextBox x:Name="TextBoxSend" Text="{Binding SendText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+				 Margin="0, 0, 0, 0" Foreground="{StaticResource GrayBrush2}" Background="{StaticResource AccentColorBrush4}"
 				 TextWrapping="Wrap" Height="Auto" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+				 metro:TextBoxHelper.Watermark="Press ENTER to send..."
 				 VerticalScrollBarVisibility="Auto" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" MaxLength="510" MaxLines="4">
 			<TextBox.InputBindings>
 				<KeyBinding Key="Enter" Command="{Binding KeyUp_Enter_Command}" />
@@ -18,38 +22,45 @@
 			</TextBox.InputBindings>
 		</TextBox>
 
-		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding Users}" HorizontalAlignment="Left" Margin="0,0,5,0"
+		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding Users}" HorizontalAlignment="Left"
 				 BorderBrush="{x:Null}"
 				 Visibility="{Binding HasItems, RelativeSource={RelativeSource Self}, Converter={StaticResource BooleanToVisiblity}}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="{Binding Name}" />
+						<TextBlock Text="{Binding Name}" Margin="15, 0, 7, 0" />
 					</StackPanel>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
 		<ListBox x:Name="ListBoxMessages" ItemsSource="{Binding Messages}"
-				 ItemTemplate="{DynamicResource ListBoxMessagesTemplate}"
-				 Margin="0" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Top"
+				 Margin="0" Padding="0" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Top"
 				 HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-				 m:ListBoxBehaviour.ScrollOnNewItem="True" />
+				 m:ListBoxBehaviour.ScrollOnNewItem="True">
+			<!--<ListBox.ItemContainerStyle>
+					<Style TargetType="ListBoxItem">
+						<Setter Property=""></Setter>
+					</Style>
+				 </ListBox.ItemContainerStyle>-->
+		</ListBox>
 	</DockPanel>
 
 	<UserControl.Resources>
-		<DataTemplate x:Key="ListBoxMessagesTemplate" DataType="{x:Type local:ChannelViewModel}">
+
+
+		<!--<DataTemplate x:Key="ListBoxMessagesTemplate">
 			<ContentControl DataContext="{Binding DataContext, ElementName=ListBoxMessages}" Content="{Binding}">
 				<ContentControl.Style>
 					<Style TargetType="{x:Type ContentControl}">
-						<Setter Property="ContentTemplate" Value="{StaticResource MessageTemplate}" />
+						<Setter Property="ContentTemplate" Value="{DynamicResource MessageTemplate}" />
 						<Style.Triggers>
 							<DataTrigger Binding="{Binding IsPrivate}" Value="True">
-								<Setter Property="ContentTemplate" Value="{StaticResource SimpleMessageTemplate}" />
+								<Setter Property="ContentTemplate" Value="{DynamicResource SimpleMessageTemplate}" />
 							</DataTrigger>
 						</Style.Triggers>
 					</Style>
 				</ContentControl.Style>
 			</ContentControl>
-		</DataTemplate>
+		</DataTemplate>-->
 	</UserControl.Resources>
 </UserControl>

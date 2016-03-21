@@ -24,7 +24,7 @@
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<StackPanel Orientation="Vertical">
-						<TextBlock Text="{Binding Name}" />
+						<TextBlock Text="{Binding Name}" TextAlignment="Right" Margin="0, 2, 20, 2"/>
 					</StackPanel>
 				</DataTemplate>
 			</ListBox.ItemTemplate>

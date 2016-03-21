@@ -12,11 +12,9 @@ namespace Avocado.ViewModel {
     public class ServerViewModel : INotifyPropertyChanged {
         private static readonly string[] IrrelevantNicknames = {"NickServ", "ChanServ", MainViewModel.Nickname};
 
-        private bool _hostIsSelected;
-
         private string _hostname;
 
-        private ChannelViewModel _selectedChannel;
+       public ObservableCollection<ChannelViewModel> Channels { get; } = new ObservableCollection<ChannelViewModel>(); 
 
         public ServerViewModel(string address, int port) {
             Hostname = address;
@@ -39,17 +37,6 @@ namespace Avocado.ViewModel {
 
         public bool ShouldRun { get; private set; }
 
-        public bool HostIsSelected {
-            get { return _hostIsSelected; }
-            set {
-                _hostIsSelected = value;
-                Debug.WriteLine(value);
-                if (!value) return;
-
-                SelectedChannel = GetChannel(Hostname);
-            }
-        }
-
         private bool IsVerified { get; set; }
 
         public string Hostname {
@@ -66,23 +53,14 @@ namespace Avocado.ViewModel {
 
         public Server Connection { get; }
 
-        public ChannelViewModel SelectedChannel {
-            get { return _selectedChannel; }
-            set {
-                if (value == _selectedChannel) return;
 
-                _selectedChannel = value;
-                NotifyPropertyChanged("SelectedChannel");
-                Debug.WriteLine($"Selected channel changed to {value.Name}", "Information");
-            }
-        }
 
-        public ObservableCollection<ChannelViewModel> Channels { get; } = new ObservableCollection<ChannelViewModel>();
+        //public ObservableCollection<ChannelViewModel> Channels { get; } = new ObservableCollection<ChannelViewModel>();
 
-        public ObservableCollection<ChannelViewModel> ShortChannels {
-            get { return new ObservableCollection<ChannelViewModel>(Channels.Where(chan => chan.Name != Hostname)); }
-        }
-
+        //public ObservableCollection<ChannelViewModel> ShortChannels {
+        //    get { return new ObservableCollection<ChannelViewModel>(Channels.Where(chan => chan.Name != Hostname)); }
+        //}
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void PreConnect() {
@@ -102,7 +80,7 @@ namespace Avocado.ViewModel {
         }
 
         public ChannelViewModel GetChannel(string name) {
-            return string.IsNullOrEmpty(name) ? null : Channels.FirstOrDefault(channel => channel.Name.Equals(name));
+            return Channels.FirstOrDefault(channel => channel.Name.Equals(name));
         }
 
         private void CheckChangeHost(string hostname) {
@@ -162,7 +140,7 @@ namespace Avocado.ViewModel {
             DisplayMessage(ProcessMessage(message));
         }
 
-        private void SendMessageOnEvent(object sender, OutputMessage message) {
+        private void SendMessageOnEvent(object sender, Message message) {
             Connection.Write(message);
         }
 
@@ -195,7 +173,7 @@ namespace Avocado.ViewModel {
                             string.Join(", ", channel.Users.Select(user => user.Name).ToList())));
                 case "366": // end of names reply
                     // in this instance, SplitArgs[0] is the target channel
-                    SelectedChannel = GetChannel(message.SplitArgs[0]);
+                    //SelectedChannel = GetChannel(message.SplitArgs[0]);
                     break;
                 default:
                     return new Message(message.Nickname, message.Target, message.Args);
