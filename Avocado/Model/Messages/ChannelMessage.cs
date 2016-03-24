@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Avocado.Model {
+namespace Avocado.Model.Messages {
     internal class Regexes {
         public static readonly Regex Message =
             new Regex(@"^:(?<Sender>[^\s]+)\s(?<Type>[^\s]+)\s(?<Target>[^\s]+)\s?:?(?<Args>.*)", RegexOptions.Compiled);
@@ -51,9 +51,8 @@ namespace Avocado.Model {
 
             if (!senderMatch.Success) return;
 
-            string realname = senderMatch.Groups["Realname"].Value;
             Nickname = senderMatch.Groups["Nickname"].Value;
-            Realname = realname.StartsWith("~") ? realname.Substring(1) : realname;
+            Realname = senderMatch.Groups["Realname"].Value;
             Hostname = senderMatch.Groups["Hostname"].Value;
             IsRealUser = true;
         }

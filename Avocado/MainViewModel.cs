@@ -4,14 +4,12 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using Avocado.Model;
 
-namespace Avocado.ViewModel {
+namespace Avocado {
     public class MainViewModel : INotifyPropertyChanged {
-        private Visibility _newServerDialogueVisible = Visibility.Visible;
-        private ChannelViewModel _selectedChannel;
+        private Channel _selectedChannel;
         private string _selectedChannelName;
 
         private string _serverAddress;
@@ -33,46 +31,36 @@ namespace Avocado.ViewModel {
         public string ServerPort {
             get { return _serverPort; }
             set {
-                int test;
-                bool isNull = string.IsNullOrEmpty(value);
+                int temp;
 
-                if (!int.TryParse(value, out test) &&
-                    !isNull) return;
+                if (!int.TryParse(value, out temp) &&
+                    !string.IsNullOrEmpty(value)) return;
 
-                _serverPort = isNull ? string.Empty : value;
+                _serverPort = value;
                 NotifyPropertyChanged("ServerPort");
             }
         }
 
-        public ObservableCollection<ServerViewModel> Servers { get; } =
-            new ObservableCollection<ServerViewModel>();
+        public ObservableCollection<Server> Servers { get; } =
+            new ObservableCollection<Server>();
 
         public ObservableCollection<string> ChannelNames { get; } = new ObservableCollection<string>();
 
         public string SelectedChannelName {
             get { return _selectedChannelName; }
             set {
-                if (value.Equals(_selectedChannelName) ||
-                    string.IsNullOrEmpty(value)) return;
+                if (string.IsNullOrEmpty(value) ||
+                    value.Equals(_selectedChannelName)) return;
 
                 _selectedChannelName = value;
-                NotifyPropertyChanged("SelectedChannelName");
-
                 SetSelectedChannel(value);
+                NotifyPropertyChanged("SelectedChannelName");
             }
         }
 
-        public ICommand NewServerButtonClick => new ActionCommand(NewServerButton);
+        public ICommand NewServerButtonCommand => new ActionCommand(NewServerButtonClick);
 
-        public Visibility NewServerDialogueVisible {
-            get { return _newServerDialogueVisible; }
-            set {
-                _newServerDialogueVisible = value;
-                NotifyPropertyChanged("NewServerDialogueVisible");
-            }
-        }
-
-        public ChannelViewModel SelectedChannel {
+        public Channel SelectedChannel {
             get { return _selectedChannel; }
             set {
                 if (value == _selectedChannel) return;
@@ -86,20 +74,16 @@ namespace Avocado.ViewModel {
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void SetSelectedChannel(string channelName) {
-            ChannelViewModel temp =
+            Channel temp =
                 Servers.SelectMany(server => server.Channels).FirstOrDefault(channel => channel.Name.Equals(channelName));
 
-            if (temp == null) {
-                if (ChannelNames.Contains(channelName)) ChannelNames.Remove(channelName);
-
-                return;
-            }
+            if (temp == null) return;
 
             SelectedChannel = temp;
             NotifyPropertyChanged("SelectedChannel");
         }
 
-        private void NewServerButton() {
+        private void NewServerButtonClick() {
             int temp;
             if (string.IsNullOrEmpty(ServerAddress) ||
                 string.IsNullOrEmpty(ServerPort) ||
@@ -110,26 +94,27 @@ namespace Avocado.ViewModel {
         }
 
         public void NewServer(string address, int port) {
-            ServerViewModel temp = new ServerViewModel(address, port);
-            temp.Channels.CollectionChanged += UpdateChannelNamesCollection;
-            Servers.Add(temp);
+            Server newServer = new Server(address, port, UpdateChannelNamesCollection);
+            Servers.Add(newServer);
         }
 
         private void NotifyPropertyChanged(string info) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
 
+        // if this is called when server is being constructed then Servers list has no entries
         private void UpdateChannelNamesCollection(object sender, NotifyCollectionChangedEventArgs e) {
             switch (e.Action) {
                 case NotifyCollectionChangedAction.Add:
-                    foreach ( ChannelViewModel viewModel in
-                            e.NewItems.Cast<ChannelViewModel>().Where(viewModel => ChannelNames.Contains(viewModel.Name))) {
-                        ChannelNames.Add(viewModel.Name);
+                    foreach (Channel channel in
+                        e.NewItems.Cast<Channel>().Where(viewModel => !ChannelNames.Contains(viewModel.Name))) {
+                        ChannelNames.Add(channel.Name);
+                        SelectedChannelName = channel.Name;
                     }
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (ChannelViewModel viewModel in
-                            e.NewItems.Cast<ChannelViewModel>().Where(viewModel => ChannelNames.Contains(viewModel.Name))) {
+                    foreach (Channel viewModel in
+                        e.NewItems.Cast<Channel>().Where(viewModel => ChannelNames.Contains(viewModel.Name))) {
                         ChannelNames.Remove(viewModel.Name);
                     }
                     break;
@@ -142,6 +127,10 @@ namespace Avocado.ViewModel {
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public MainViewModel() {
+            NewServer("irc.foonetic.net", 6667);
         }
     }
 }

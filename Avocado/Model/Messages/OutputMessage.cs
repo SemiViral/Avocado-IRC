@@ -1,4 +1,4 @@
-﻿namespace Avocado.Model {
+﻿namespace Avocado.Model.Messages {
     public class OutputMessage : Message {
         public OutputMessage(string type, string target, string args) {
             Type = type;

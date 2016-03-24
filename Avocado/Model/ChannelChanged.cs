@@ -1,5 +1,4 @@
 ﻿using System;
-using Avocado.ViewModel;
 
 namespace Avocado.Model {
     public delegate void ChannelChangedEventHandler(object sender, ChannelChangedEventArgs e);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Avocado {
+namespace Avocado.View {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>

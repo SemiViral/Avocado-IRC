@@ -1,14 +1,14 @@
 ﻿<Application x:Class="Avocado.App"
 			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:local="clr-namespace:Avocado.ViewModel"
 			 xmlns:root="clr-namespace:Avocado"
 			 xmlns:model="clr-namespace:Avocado.Model"
-			 StartupUri="MainWindow.xaml"
+			 xmlns:message="clr-namespace:Avocado.Model.Messages"
+			 xmlns:view="clr-namespace:Avocado.View"
+			 StartupUri="View/MainWindow.xaml"
 			 ShutdownMode="OnExplicitShutdown">
 	<Application.Resources>
 		<ResourceDictionary>
-			<local:MainViewModel x:Key="MainViewModel" />
 			<BooleanToVisibilityConverter x:Key="BooleanToVisiblity" />
 
 			<Style x:Key="ListBoxItemNoHighlighting" TargetType="ListBoxItem">
@@ -50,24 +50,20 @@
 				</Setter>
 			</Style>
 
-			<DataTemplate x:Key="ServersTemplate" DataType="{x:Type root:SelectionListUserControl}">
-				<root:SelectionListUserControl />
+			<DataTemplate x:Key="ChannelsTemplate" DataType="{x:Type root:ChannelViewModel}">
+				<view:ChannelUserControl />
 			</DataTemplate>
 
-			<DataTemplate x:Key="ChannelsTemplate" DataType="{x:Type root:ChannelUserControl}">
-				<root:ChannelUserControl />
+			<DataTemplate DataType="{x:Type message:ChannelMessage}">
+				<view:MessageUserControl />
 			</DataTemplate>
 
-			<DataTemplate DataType="{x:Type model:ChannelMessage}">
-				<root:MessageUserControl />
+			<DataTemplate DataType="{x:Type message:OutputMessage}">
+				<view:SimpleMessageUserControl />
 			</DataTemplate>
 
-			<DataTemplate DataType="{x:Type model:OutputMessage}">
-				<root:SimpleMessageUserControl />
-			</DataTemplate>
-
-			<DataTemplate DataType="{x:Type model:Message}">
-				<root:SimpleMessageUserControl/>
+			<DataTemplate DataType="{x:Type message:Message}">
+				<view:SimpleMessageUserControl />
 			</DataTemplate>
 
 			<ResourceDictionary.MergedDictionaries>

@@ -1,10 +1,9 @@
-﻿<UserControl x:Class="Avocado.ChannelUserControl"
+﻿<UserControl x:Class="Avocado.View.ChannelUserControl"
 			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:root="clr-namespace:Avocado"
-			 xmlns:local="clr-namespace:Avocado.ViewModel"
 			 xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
 			 xmlns:model="clr-namespace:Avocado.Model"
 			 xmlns:m="clr-namespace:Avocado.Model"
@@ -22,7 +21,7 @@
 			</TextBox.InputBindings>
 		</TextBox>
 
-		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding Users}" HorizontalAlignment="Left"
+		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding Path=Channel.Users}" HorizontalAlignment="Left"
 				 BorderBrush="{x:Null}"
 				 Visibility="{Binding HasItems, RelativeSource={RelativeSource Self}, Converter={StaticResource BooleanToVisiblity}}">
 			<ListBox.ItemTemplate>
@@ -33,7 +32,7 @@
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-		<ListBox x:Name="ListBoxMessages" ItemsSource="{Binding Messages}"
+		<ListBox x:Name="ListBoxMessages" ItemsSource="{Binding Path=Channel.Messages}"
 				 Margin="0" Padding="0" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Top"
 				 HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 				 m:ListBoxBehaviour.ScrollOnNewItem="True">

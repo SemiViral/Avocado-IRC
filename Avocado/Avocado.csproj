@@ -64,19 +64,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ChannelMessageUserControl.xaml.cs">
+    <Compile Include="View\ChannelMessageUserControl.xaml.cs">
       <DependentUpon>ChannelMessageUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\ActionCommand.cs" />
+    <Compile Include="Model\Channel.cs" />
     <Compile Include="Model\ChannelChanged.cs" />
-    <Compile Include="Model\ErrorMessage.cs" />
+    <Compile Include="Model\Messages\Message.cs" />
+    <Compile Include="Model\Messages\ErrorMessage.cs" />
     <Compile Include="Model\ListBoxBehaviour.cs" />
-    <Compile Include="Model\Message.cs" />
-    <Compile Include="Model\OutputMessage.cs" />
+    <Compile Include="Model\Messages\OutputMessage.cs" />
+    <Compile Include="Model\Connection.cs" />
+    <Compile Include="Model\Messages\ChannelMessage.cs" />
     <Compile Include="Model\Server.cs" />
-    <Compile Include="Model\ChannelMessage.cs" />
     <Compile Include="Model\User.cs" />
-    <Compile Include="NewServerUserControl.xaml.cs">
+    <Compile Include="View\NewServerUserControl.xaml.cs">
       <DependentUpon>NewServerUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
@@ -85,17 +87,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ChannelUserControl.xaml.cs">
+    <Compile Include="View\ChannelUserControl.xaml.cs">
       <DependentUpon>ChannelUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SelectionListUserControl.xaml.cs">
+    <Compile Include="View\SelectionListUserControl.xaml.cs">
       <DependentUpon>SelectionListUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SimpleMessageUserControl.xaml.cs">
+    <Compile Include="View\SimpleMessageUserControl.xaml.cs">
       <DependentUpon>SimpleMessageUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\ChannelViewModel.cs" />
-    <Page Include="MainWindow.xaml">
+    <Compile Include="ChannelViewModel.cs" />
+    <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -103,29 +105,28 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ServerViewModel.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="MainViewModel.cs" />
+    <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ChannelMessageUserControl.xaml">
+    <Page Include="View\ChannelMessageUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ChannelUserControl.xaml">
+    <Page Include="View\ChannelUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="NewServerUserControl.xaml">
+    <Page Include="View\NewServerUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SelectionListUserControl.xaml">
+    <Page Include="View\SelectionListUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SimpleMessageUserControl.xaml">
+    <Page Include="View\SimpleMessageUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -143,7 +144,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="View\packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

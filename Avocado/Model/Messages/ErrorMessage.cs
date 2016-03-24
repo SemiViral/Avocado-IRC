@@ -1,4 +1,4 @@
-﻿namespace Avocado.Model {
+﻿namespace Avocado.Model.Messages {
     public class ErrorMessage : Message {
         /// <summary>
         ///     Use this constructor for displaying error messages
