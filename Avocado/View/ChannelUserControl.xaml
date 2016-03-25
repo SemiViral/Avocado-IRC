@@ -12,7 +12,7 @@
 	<DockPanel Margin="0">
 		<TextBox x:Name="TextBoxSend" Text="{Binding SendText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 				 Margin="0, 0, 0, 0" Foreground="{StaticResource GrayBrush2}" Background="{StaticResource AccentColorBrush4}"
-				 TextWrapping="Wrap" Height="Auto" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+				 TextWrapping="Wrap" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 				 metro:TextBoxHelper.Watermark="Press ENTER to send..."
 				 VerticalScrollBarVisibility="Auto" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" MaxLength="510" MaxLines="4">
 			<TextBox.InputBindings>
@@ -21,7 +21,7 @@
 			</TextBox.InputBindings>
 		</TextBox>
 
-		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding Path=Channel.Users}" HorizontalAlignment="Left"
+		<ListBox x:Name="ListBoxUsers" ItemsSource="{Binding UsersView.View}" HorizontalAlignment="Left"
 				 BorderBrush="{x:Null}"
 				 Visibility="{Binding HasItems, RelativeSource={RelativeSource Self}, Converter={StaticResource BooleanToVisiblity}}">
 			<ListBox.ItemTemplate>
@@ -32,34 +32,12 @@
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
+
 		<ListBox x:Name="ListBoxMessages" ItemsSource="{Binding Path=Channel.Messages}"
-				 Margin="0" Padding="0" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Top"
+				 ItemContainerStyle="{StaticResource ListBoxItemNoHighlighting}"
+				 Margin="0" Padding="0" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}"
+				 VerticalAlignment="Bottom"
 				 HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-				 m:ListBoxBehaviour.ScrollOnNewItem="True">
-			<!--<ListBox.ItemContainerStyle>
-					<Style TargetType="ListBoxItem">
-						<Setter Property=""></Setter>
-					</Style>
-				 </ListBox.ItemContainerStyle>-->
-		</ListBox>
+				 m:ListBoxBehaviour.ScrollOnNewItem="True" />
 	</DockPanel>
-
-	<UserControl.Resources>
-
-
-		<!--<DataTemplate x:Key="ListBoxMessagesTemplate">
-			<ContentControl DataContext="{Binding DataContext, ElementName=ListBoxMessages}" Content="{Binding}">
-				<ContentControl.Style>
-					<Style TargetType="{x:Type ContentControl}">
-						<Setter Property="ContentTemplate" Value="{DynamicResource MessageTemplate}" />
-						<Style.Triggers>
-							<DataTrigger Binding="{Binding IsPrivate}" Value="True">
-								<Setter Property="ContentTemplate" Value="{DynamicResource SimpleMessageTemplate}" />
-							</DataTrigger>
-						</Style.Triggers>
-					</Style>
-				</ContentControl.Style>
-			</ContentControl>
-		</DataTemplate>-->
-	</UserControl.Resources>
 </UserControl>

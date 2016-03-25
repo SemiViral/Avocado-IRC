@@ -1,19 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Input;
 using Avocado.Model;
 using Avocado.Model.Messages;
 
 namespace Avocado {
     public class ChannelViewModel : INotifyPropertyChanged {
-        private Channel _channel;
+        private static readonly SortDescription AccessLevelSort = new SortDescription("AccessLevel",
+            ListSortDirection.Ascending);
 
         private readonly List<string> _pastInputs = new List<string>();
+        private Channel _channel;
 
         private string _sendText;
 
-        private List<Message> _tempraryArchive = new List<Message>();
+        public ChannelViewModel(Channel baseChannel) {
+            Channel = baseChannel;
+
+            UsersView.Source = Channel.Users;
+            UsersView.SortDescriptions.Add(AccessLevelSort);
+        }
+
+        public CollectionViewSource UsersView { get; } = new CollectionViewSource();
 
         public Channel Channel {
             get { return _channel; }
@@ -44,12 +54,11 @@ namespace Avocado {
         }
 
         private void KeyUp_Enter() {
+            if (string.IsNullOrEmpty(SendText)) return;
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)) {
                 SendText += '\n';
                 return;
             }
-
-            if (string.IsNullOrEmpty(SendText)) return;
 
             if (SendText.StartsWith("/")) {
                 List<string> splitText = SendText.Split(new[] {' '}, 2).ToList();

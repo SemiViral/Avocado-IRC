@@ -15,8 +15,6 @@ namespace Avocado.Model {
 
         private string _hostname;
 
-        public ObservableCollection<Channel> Channels { get; } = new ObservableCollection<Channel>();
-
         public Server(string address, int port, Action<object, NotifyCollectionChangedEventArgs> channelAddedAction) {
             Channels.CollectionChanged += (sender, args) => channelAddedAction(sender, args);
             Hostname = address;
@@ -25,15 +23,18 @@ namespace Avocado.Model {
             Connection = new Connection(address, port);
             Connection.MessageRecieved += (sender, message) => DispatchAction(() => OnMessageRecieved(message));
 
-            Thread connectionThread = new Thread(Connection.Listen) {
-                IsBackground = true
-            };
-            connectionThread.Start();
+            ThreadPool.QueueUserWorkItem(state => {
+                Connection.Connect();
 
-            PreConnect();
+                if (!Connection.IsInitiated) return;
+
+                Connection.Listen();
+            });
 
             ShouldRun = true;
         }
+
+        public ObservableCollection<Channel> Channels { get; } = new ObservableCollection<Channel>();
 
         public bool ShouldRun { get; private set; }
 
@@ -62,11 +63,6 @@ namespace Avocado.Model {
         //}
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public void PreConnect() {
-            Connection.Write(new OutputMessage("USER", $"{MainViewModel.Nickname} 0 * {MainViewModel.Realname}"));
-            Connection.Write(new OutputMessage("NICK", MainViewModel.Nickname));
-        }
 
         public void CreateChannel(string name) {
             Channel temp = new Channel(name);

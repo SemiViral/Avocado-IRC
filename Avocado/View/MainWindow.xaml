@@ -1,47 +1,38 @@
 ﻿<metro:MetroWindow x:Class="Avocado.View.MainWindow"
-		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+				   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+				   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+				   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 				   xmlns:m="clr-namespace:Avocado.Model"
-		xmlns:root="clr-namespace:Avocado"
-		xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-		xmlns:view="clr-namespace:Avocado.View"
-		mc:Ignorable="d"
-		Title="Avocado IRC"
-		TitleCaps="False"
-		Foreground="{x:Null}" Background="#FFFFFF">
+				   xmlns:root="clr-namespace:Avocado"
+				   xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+				   xmlns:view="clr-namespace:Avocado.View"
+				   mc:Ignorable="d"
+				   Title="Avocado IRC"
+				   TitleCaps="False"
+				   Foreground="{x:Null}" Background="#FFFFFF">
 	<DockPanel Margin="0">
 		<DockPanel Dock="Left" Width="200" Margin="0">
 			<ListBox x:Name="ListBoxPrimary" ItemsSource="{Binding ChannelNames}" SelectedItem="{Binding SelectedChannelName}"
 					 ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderBrush="{x:Null}"
-					 DockPanel.Dock="Top" Margin="0" Padding="0" MinWidth="125" BorderThickness="0"/>
-			<Button DockPanel.Dock="Bottom" Content="+" Background="{StaticResource AccentColorBrush}" Foreground="{StaticResource WhiteBrush}" BorderBrush="{x:Null}" Command="{Binding NewServerButtonCommand}" FontSize="16" Padding="0, 2, 0, 3" VerticalAlignment="Bottom" ClickMode="Press">
-				<!--<Button.Style>
-					<Style TargetType="Button">
-						<Setter Property="Content" Value="+" />
-						<Style.Triggers>
-							<Trigger Property="IsPressed" Value="True">
-								<Setter Property="Background" Value="{StaticResource AccentColorBrush4}" />
-							</Trigger>
-						</Style.Triggers>
-					</Style>
-				</Button.Style>-->
-			</Button>
-			<view:NewServerUserControl DockPanel.Dock="Bottom" VerticalAlignment="Bottom"/>
+					 DockPanel.Dock="Top" Margin="0" Padding="0" MinWidth="125" BorderThickness="0">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding}" TextAlignment="Right" Padding="0, 0, 15, 0" FontSize="15" />
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+			<Button DockPanel.Dock="Bottom" Content="+" Background="{StaticResource AccentColorBrush}"
+					Foreground="{StaticResource WhiteBrush}" BorderBrush="{x:Null}" Command="{Binding NewServerButtonCommand}"
+					FontSize="16" Padding="0, 2, 0, 3" VerticalAlignment="Bottom" ClickMode="Press" Height="26" />
+			<view:NewServerUserControl DockPanel.Dock="Bottom" VerticalAlignment="Bottom" />
 		</DockPanel>
 		<ContentControl x:Name="TabControlPrimary" ContentTemplate="{StaticResource ChannelsTemplate}"
-					Margin="0" Padding="0" BorderBrush="{x:Null}" DockPanel.Dock="Right" Content="{Binding SelectedChannel}"
-					Foreground="{x:Null}" HorizontalAlignment="Stretch" BorderThickness="0" Background="{StaticResource GrayBrush8}">
-			<ContentControl.Style>
-				<Style TargetType="ContentControl">
-					<Setter Property="Background" Value="{StaticResource GrayBrush8}" />
-				</Style>
-			</ContentControl.Style>
-		</ContentControl>
+						Margin="0" Padding="0" BorderBrush="{x:Null}" DockPanel.Dock="Right" Content="{Binding SelectedChannel}"
+						Foreground="{x:Null}" HorizontalAlignment="Stretch" BorderThickness="0" Background="{StaticResource GrayBrush8}" />
 	</DockPanel>
 
 	<Window.DataContext>
-		<root:MainViewModel/>
+		<root:MainViewModel />
 	</Window.DataContext>
 </metro:MetroWindow>

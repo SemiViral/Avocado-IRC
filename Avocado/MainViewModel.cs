@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -9,11 +10,16 @@ using Avocado.Model;
 
 namespace Avocado {
     public class MainViewModel : INotifyPropertyChanged {
-        private Channel _selectedChannel;
+        public const int BUFFER_SIZE = 20;
+        private ChannelViewModel _selectedChannel;
         private string _selectedChannelName;
 
         private string _serverAddress;
         private string _serverPort;
+
+        public MainViewModel() {
+            NewServer("irc.foonetic.net", 6667);
+        }
 
         public static string Nickname { get; private set; } = "TestIRCNickname";
         public static string Realname { get; private set; } = "TestIRCRealname";
@@ -41,8 +47,7 @@ namespace Avocado {
             }
         }
 
-        public ObservableCollection<Server> Servers { get; } =
-            new ObservableCollection<Server>();
+        public List<Server> Servers { get; } = new List<Server>();
 
         public ObservableCollection<string> ChannelNames { get; } = new ObservableCollection<string>();
 
@@ -60,14 +65,14 @@ namespace Avocado {
 
         public ICommand NewServerButtonCommand => new ActionCommand(NewServerButtonClick);
 
-        public Channel SelectedChannel {
+        public ChannelViewModel SelectedChannel {
             get { return _selectedChannel; }
             set {
                 if (value == _selectedChannel) return;
 
                 _selectedChannel = value;
                 NotifyPropertyChanged("SelectedChannel");
-                Debug.WriteLine($"Selected channel changed to {value.Name}", "Information");
+                Debug.WriteLine($"Selected channel changed to {value.Channel.Name}", "Information");
             }
         }
 
@@ -79,7 +84,7 @@ namespace Avocado {
 
             if (temp == null) return;
 
-            SelectedChannel = temp;
+            SelectedChannel = new ChannelViewModel(temp);
             NotifyPropertyChanged("SelectedChannel");
         }
 
@@ -107,15 +112,16 @@ namespace Avocado {
             switch (e.Action) {
                 case NotifyCollectionChangedAction.Add:
                     foreach (Channel channel in
-                        e.NewItems.Cast<Channel>().Where(viewModel => !ChannelNames.Contains(viewModel.Name))) {
+                        e.NewItems.Cast<Channel>().Where(channel => !ChannelNames.Contains(channel.Name))) {
                         ChannelNames.Add(channel.Name);
                         SelectedChannelName = channel.Name;
                     }
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (Channel viewModel in
-                        e.NewItems.Cast<Channel>().Where(viewModel => ChannelNames.Contains(viewModel.Name))) {
-                        ChannelNames.Remove(viewModel.Name);
+                    foreach (Channel channel in
+                        e.OldItems.Cast<Channel>().Where(channel => ChannelNames.Contains(channel.Name))) {
+                        ChannelNames.Remove(channel.Name);
+                        SelectedChannelName = ChannelNames.LastOrDefault();
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace:
@@ -127,10 +133,6 @@ namespace Avocado {
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        public MainViewModel() {
-            NewServer("irc.foonetic.net", 6667);
         }
     }
 }

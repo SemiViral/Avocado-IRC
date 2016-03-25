@@ -6,13 +6,24 @@
 			 xmlns:local="clr-namespace:Avocado"
 			 mc:Ignorable="d">
 	<DockPanel Margin="0">
-		<TextBlock x:Name="Timestamp" TextWrapping="Wrap" Text="{Binding Timestamp, FallbackValue=Timestamp}"
-				   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,0,6,0" Foreground="{StaticResource GrayBrush3}" />
-		<TextBlock x:Name="Nickname" TextWrapping="Wrap" Text="{Binding Nickname, FallbackValue=Nickname}"
-				   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,3,0"
-				   Foreground="{StaticResource AccentColorBrush}" />
-		<TextBlock x:Name="Args" Margin="0,0,0,0" TextWrapping="Wrap"
-				   Text="{Binding Args, FallbackValue=Message, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top"
-				   Foreground="{StaticResource GrayBrush4}" />
+		<TextBox x:Name="Timestamp" Text="{Binding Timestamp, FallbackValue=Timestamp, Mode=OneTime}" Margin="4,0,6,0"
+				 Foreground="{StaticResource GrayBrush3}" />
+		<TextBox x:Name="Nickname" Text="{Binding Nickname, FallbackValue=Nickname, Mode=OneTime}" Margin="0,0,3,0"
+				 Foreground="{StaticResource AccentColorBrush}" />
+		<TextBox x:Name="Args" Text="{Binding Args, FallbackValue=Message, Mode=OneTime}" Margin="0"
+				 Foreground="{StaticResource GrayBrush4}" />
 	</DockPanel>
+
+	<UserControl.Resources>
+		<Style TargetType="{x:Type TextBox}">
+			<Style.Setters>
+				<Setter Property="IsReadOnly" Value="True" />
+				<Setter Property="HorizontalAlignment" Value="Left" />
+				<Setter Property="VerticalAlignment" Value="Top" />
+				<Setter Property="TextWrapping" Value="Wrap" />
+				<Setter Property="BorderThickness" Value="0" />
+				<Setter Property="Background" Value="{x:Null}" />
+			</Style.Setters>
+		</Style>
+	</UserControl.Resources>
 </UserControl>

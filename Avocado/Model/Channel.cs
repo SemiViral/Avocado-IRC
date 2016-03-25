@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Linq;
 using Avocado.Model.Messages;
 
 namespace Avocado.Model {
@@ -9,9 +8,9 @@ namespace Avocado.Model {
         public Channel(string name) {
             Name = name;
 
-            if (Name.StartsWith("#"))
-                _users.CollectionChanged += OnUsersAddedSort;
-            else IsPrivate = true;
+            if (!Name.StartsWith("#")) IsPrivate = true;
+
+            MessagesArchive.CollectionChanged += SizeMessageBuffer;
 
             Debug.WriteLine($"Channel {Name} created", "Information");
         }
@@ -20,20 +19,29 @@ namespace Avocado.Model {
 
         public string Name { get; set; }
 
-        private ObservableCollection<User> _users { get; } = new ObservableCollection<User>();
-        public ObservableCollection<User> Users { get; set; }
+        public ObservableCollection<User> Users { get; } = new ObservableCollection<User>();
         public ObservableCollection<Message> Messages { get; } = new ObservableCollection<Message>();
+        private ObservableCollection<Message> MessagesArchive { get; } = new ObservableCollection<Message>();
 
-        private void OnUsersAddedSort(object sender, NotifyCollectionChangedEventArgs e) {
-            Users = new ObservableCollection<User>(_users.OrderBy(user => user.AccessLevel));
+        private void SizeMessageBuffer(object sender, NotifyCollectionChangedEventArgs e) {
+            if (Messages.Count + e.NewItems.Count > MainViewModel.BUFFER_SIZE) {
+                foreach (Message message in e.NewItems) {
+                    Messages.RemoveAt(0);
+                    Messages.Add(message);
+                }
+            } else {
+                foreach (Message message in e.NewItems) {
+                    Messages.Add(message);
+                }
+            }
         }
 
         public void AppendMessage(Message message) {
-            Messages.Add(message);
+            MessagesArchive.Add(message);
         }
 
         public void AddUser(string name) {
-            _users.Add(new User(name));
+            Users.Add(new User(name));
         }
 
         public event MessageEventHandler SendMessageEvent;

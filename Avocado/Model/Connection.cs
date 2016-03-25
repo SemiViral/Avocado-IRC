@@ -15,18 +15,14 @@ namespace Avocado.Model {
         private StreamWriter _writer;
 
         public Connection(string address, int port) {
-            Connect(address, port);
-
             Address = address;
             Port = port;
-
-            ShouldListen = true;
         }
+
+        public bool IsInitiated { get; private set; }
 
         public string Address { get; set; }
         public int Port { get; set; }
-
-        public bool ShouldListen { private get; set; }
 
         public void Dispose() {
             Dispose(true);
@@ -46,27 +42,33 @@ namespace Avocado.Model {
             _disposed = true;
         }
 
-        public void Connect(string address, int port) {
+        internal void Connect() {
             try {
-                _tcp = new TcpClient(address, port);
+                _tcp = new TcpClient(Address, Port);
                 _stream = _tcp.GetStream();
                 _writer = new StreamWriter(_stream);
 
-                Debug.WriteLine($"Connection opened to address {address}");
-            } catch (Exception e) {
-                MessageBox.Show($"Error occured connecting to server: {e}");
+                Debug.WriteLine($"Connection opened to address {Address}");
+            } catch (SocketException) {
+                IsInitiated = false;
+                return;
             }
+
+            Write(new OutputMessage("USER", $"{MainViewModel.Nickname} 0 * {MainViewModel.Realname}"));
+            Write(new OutputMessage("NICK", MainViewModel.Nickname));
+
+            IsInitiated = true;
         }
 
-        public void Listen() {
+        internal void Listen() {
             using (_reader = new StreamReader(_stream)) {
-                while (ShouldListen) {
+                while (IsInitiated) {
                     string data = _reader.ReadLine();
 
                     if (string.IsNullOrEmpty(data)) {
                         //MessageRecieved?.Invoke(this, new ErrorMessage(Address, "Server disconnected."));
                         MessageBox.Show($"Server {Address} disconnected.");
-                        ShouldListen = false;
+                        IsInitiated = false;
                         continue;
                     }
 
