@@ -11,11 +11,11 @@ using Avocado.Model;
 namespace Avocado {
     public class MainViewModel : INotifyPropertyChanged {
         public const int BUFFER_SIZE = 20;
-        private ChannelViewModel _selectedChannel;
-        private string _selectedChannelName;
+        private ChannelViewModel selectedChannel;
+        private string selectedChannelName;
 
-        private string _serverAddress;
-        private string _serverPort;
+        private string serverAddress;
+        private string serverPort;
 
         public MainViewModel() {
             NewServer("irc.foonetic.net", 6667);
@@ -25,24 +25,24 @@ namespace Avocado {
         public static string Realname { get; private set; } = "TestIRCRealname";
 
         public string ServerAddress {
-            get { return _serverAddress; }
+            get { return serverAddress; }
             set {
-                if (value.Equals(_serverAddress)) return;
+                if (value.Equals(serverAddress)) return;
 
-                _serverAddress = value;
+                serverAddress = value;
                 NotifyPropertyChanged("ServerAddress");
             }
         }
 
         public string ServerPort {
-            get { return _serverPort; }
+            get { return serverPort; }
             set {
                 int temp;
 
                 if (!int.TryParse(value, out temp) &&
                     !string.IsNullOrEmpty(value)) return;
 
-                _serverPort = value;
+                serverPort = value;
                 NotifyPropertyChanged("ServerPort");
             }
         }
@@ -52,12 +52,12 @@ namespace Avocado {
         public ObservableCollection<string> ChannelNames { get; } = new ObservableCollection<string>();
 
         public string SelectedChannelName {
-            get { return _selectedChannelName; }
+            get { return selectedChannelName; }
             set {
                 if (string.IsNullOrEmpty(value) ||
-                    value.Equals(_selectedChannelName)) return;
+                    value.Equals(selectedChannelName)) return;
 
-                _selectedChannelName = value;
+                selectedChannelName = value;
                 SetSelectedChannel(value);
                 NotifyPropertyChanged("SelectedChannelName");
             }
@@ -66,11 +66,11 @@ namespace Avocado {
         public ICommand NewServerButtonCommand => new ActionCommand(NewServerButtonClick);
 
         public ChannelViewModel SelectedChannel {
-            get { return _selectedChannel; }
+            get { return selectedChannel; }
             set {
-                if (value == _selectedChannel) return;
+                if (value == selectedChannel) return;
 
-                _selectedChannel = value;
+                selectedChannel = value;
                 NotifyPropertyChanged("SelectedChannel");
                 Debug.WriteLine($"Selected channel changed to {value.Channel.Name}", "Information");
             }
@@ -107,7 +107,7 @@ namespace Avocado {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
 
-        // if this is called when server is being constructed then Servers list has no entries
+        // if this is called when server is being constructed then Channels list has no entries
         private void UpdateChannelNamesCollection(object sender, NotifyCollectionChangedEventArgs e) {
             switch (e.Action) {
                 case NotifyCollectionChangedAction.Add:

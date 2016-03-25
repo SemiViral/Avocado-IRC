@@ -6,8 +6,11 @@ using System.Windows;
 using System.Windows.Controls;
 
 namespace Avocado.Model {
+    /// <summary>
+    /// Used to force ListBox to scroll down when element is added.
+    /// </summary>
     public class ListBoxBehaviour {
-        private static readonly Dictionary<ListBox, Capture> Associations = new Dictionary<ListBox, Capture>();
+        private static readonly Dictionary<ListBox, Capture> _associations = new Dictionary<ListBox, Capture>();
 
         public static readonly DependencyProperty ScrollOnNewItemProperty =
             DependencyProperty.RegisterAttached(
@@ -43,9 +46,9 @@ namespace Avocado.Model {
                 listBox.Loaded -= ListBox_Loaded;
                 listBox.Unloaded -= ListBox_Unloaded;
 
-                if (Associations.ContainsKey(listBox))
-                    Associations[listBox].Dispose();
-                Associations[listBox] = new Capture(listBox);
+                if (_associations.ContainsKey(listBox))
+                    _associations[listBox].Dispose();
+                _associations[listBox] = new Capture(listBox);
 
                 PropertyDescriptor itemsSourcePropertyDescriptor = TypeDescriptor.GetProperties(listBox)["ItemsSource"];
                 itemsSourcePropertyDescriptor.RemoveValueChanged(listBox, ListBox_ItemsSourceChanged);
@@ -55,10 +58,10 @@ namespace Avocado.Model {
         public static void ListBox_ItemsSourceChanged(object sender, EventArgs e) {
             ListBox listBox = (ListBox)sender;
 
-            if (Associations.ContainsKey(listBox))
-                Associations[listBox].Dispose();
+            if (_associations.ContainsKey(listBox))
+                _associations[listBox].Dispose();
 
-            Associations[listBox] = new Capture(listBox);
+            _associations[listBox] = new Capture(listBox);
         }
 
         private static void ListBox_Unloaded(object sender, RoutedEventArgs e) {
@@ -67,7 +70,7 @@ namespace Avocado.Model {
             if (incc == null) return;
 
             listBox.Loaded -= ListBox_Unloaded;
-            Associations[listBox] = new Capture(listBox);
+            _associations[listBox] = new Capture(listBox);
         }
 
         private static void ListBox_Loaded(object sender, RoutedEventArgs e) {
@@ -76,30 +79,30 @@ namespace Avocado.Model {
             if (incc == null) return;
 
             listBox.Loaded -= ListBox_Loaded;
-            Associations[listBox] = new Capture(listBox);
+            _associations[listBox] = new Capture(listBox);
         }
     }
 
     internal class Capture : IDisposable {
-        private readonly INotifyCollectionChanged _incc;
-        private readonly ListBox _listBox;
+        private readonly INotifyCollectionChanged incc;
+        private readonly ListBox listBox;
 
         public Capture(ListBox listBox) {
-            _listBox = listBox;
+            this.listBox = listBox;
 
-            _incc = listBox.ItemsSource as INotifyCollectionChanged;
-            if (_incc != null)
-                _incc.CollectionChanged += incc_CollectionChanged;
+            incc = listBox.ItemsSource as INotifyCollectionChanged;
+            if (incc != null)
+                incc.CollectionChanged += incc_CollectionChanged;
         }
 
         public void Dispose() {
-            if (_incc == null) return;
+            if (incc == null) return;
 
-            _incc.CollectionChanged -= incc_CollectionChanged;
+            incc.CollectionChanged -= incc_CollectionChanged;
         }
 
         private void incc_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
-            if (e.Action == NotifyCollectionChangedAction.Add) _listBox.ScrollIntoView(e.NewItems[0]);
+            if (e.Action == NotifyCollectionChangedAction.Add) listBox.ScrollIntoView(e.NewItems[0]);
         }
     }
 }

@@ -3,10 +3,10 @@ using System.Windows.Input;
 
 namespace Avocado.Model {
     internal class ActionCommand : ICommand {
-        private readonly Action _action;
+        private readonly Action action;
 
         public ActionCommand(Action action) {
-            _action = action;
+            this.action = action;
         }
 
         public bool CanExecute(object parameter) {
@@ -14,7 +14,7 @@ namespace Avocado.Model {
         }
 
         public void Execute(object parameter) {
-            _action();
+            action();
         }
 
         public event EventHandler CanExecuteChanged;

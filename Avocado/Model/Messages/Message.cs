@@ -21,12 +21,12 @@ namespace Avocado.Model.Messages {
         }
 
         public string RawMessage { get; set; }
-
         public string Nickname { get; set; }
         public string Target { get; set; }
         public string Type { get; set; }
         public string Args { get; set; }
-
         public string Timestamp { get; } = DateTime.Now.ToShortTimeString();
+
+        public bool IsPing { get; set; }
     }
 }

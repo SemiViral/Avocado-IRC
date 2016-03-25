@@ -7,12 +7,12 @@ using Avocado.Model.Messages;
 
 namespace Avocado.Model {
     public class Connection : IDisposable {
-        private bool _disposed;
-        private StreamReader _reader;
-        private NetworkStream _stream;
+        private bool disposed;
+        private StreamReader reader;
+        private NetworkStream stream;
 
-        private TcpClient _tcp;
-        private StreamWriter _writer;
+        private TcpClient tcp;
+        private StreamWriter writer;
 
         public Connection(string address, int port) {
             Address = address;
@@ -29,24 +29,27 @@ namespace Avocado.Model {
             GC.SuppressFinalize(this);
         }
 
-        public event EventHandler<ChannelMessage> MessageRecieved;
+        public event MessageEventHandler MessageRecieved;
 
         protected virtual void Dispose(bool dispose) {
-            if (!dispose || _disposed) return;
+            if (!dispose || disposed) return;
 
-            _writer.Dispose();
-            _reader.Dispose();
-            _stream.Dispose();
-            _tcp.Close();
+            writer.Dispose();
+            reader.Dispose();
+            stream.Dispose();
+            tcp.Close();
 
-            _disposed = true;
+            disposed = true;
         }
 
+        /// <summary>
+        ///     Initialises connection
+        /// </summary>
         internal void Connect() {
             try {
-                _tcp = new TcpClient(Address, Port);
-                _stream = _tcp.GetStream();
-                _writer = new StreamWriter(_stream);
+                tcp = new TcpClient(Address, Port);
+                stream = tcp.GetStream();
+                writer = new StreamWriter(stream);
 
                 Debug.WriteLine($"Connection opened to address {Address}");
             } catch (SocketException) {
@@ -54,19 +57,27 @@ namespace Avocado.Model {
                 return;
             }
 
-            Write(new OutputMessage("USER", $"{MainViewModel.Nickname} 0 * {MainViewModel.Realname}"));
-            Write(new OutputMessage("NICK", MainViewModel.Nickname));
-
             IsInitiated = true;
         }
 
+        /// <summary>
+        /// Initial identification of client with server
+        /// </summary>
+        internal void Identify() {
+            Write(new OutputMessage("USER", $"{MainViewModel.Nickname} 0 * {MainViewModel.Realname}"));
+            Write(new OutputMessage("NICK", MainViewModel.Nickname));
+        }
+        
+        /// <summary>
+        /// Listens infinitely on connection socket
+        /// </summary>
         internal void Listen() {
-            using (_reader = new StreamReader(_stream)) {
+            using (reader = new StreamReader(stream)) {
                 while (IsInitiated) {
-                    string data = _reader.ReadLine();
+                    string data = reader.ReadLine();
 
                     if (string.IsNullOrEmpty(data)) {
-                        //MessageRecieved?.Invoke(this, new ErrorMessage(Address, "Server disconnected."));
+                        MessageRecieved?.Invoke(this, new ErrorMessage(Address, "Server disconnected."));
                         MessageBox.Show($"Server {Address} disconnected.");
                         IsInitiated = false;
                         continue;
@@ -77,16 +88,24 @@ namespace Avocado.Model {
             }
         }
 
+        /// <summary>
+        /// Writes to stream using message object
+        /// </summary>
+        /// <param name="message"></param>
         public void Write(Message message) {
             Debug.WriteLine(message.RawMessage, "Input");
-            _writer.WriteLine(message.RawMessage);
-            _writer.Flush();
+            writer.WriteLine(message.RawMessage);
+            writer.Flush();
         }
 
+        /// <summary>
+        /// Writes to stream with string
+        /// </summary>
+        /// <param name="message"></param>
         public void Write(string message) {
             Debug.WriteLine(message, "Input");
-            _writer.WriteLine(message);
-            _writer.Flush();
+            writer.WriteLine(message);
+            writer.Flush();
         }
     }
 }

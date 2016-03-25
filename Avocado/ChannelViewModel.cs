@@ -8,44 +8,44 @@ using Avocado.Model.Messages;
 
 namespace Avocado {
     public class ChannelViewModel : INotifyPropertyChanged {
-        private static readonly SortDescription AccessLevelSort = new SortDescription("AccessLevel",
+        private static readonly SortDescription _accessLevelSort = new SortDescription("AccessLevel",
             ListSortDirection.Ascending);
 
-        private readonly List<string> _pastInputs = new List<string>();
-        private Channel _channel;
+        private readonly List<string> pastInputs = new List<string>();
+        private Channel channel;
 
-        private string _sendText;
+        private string sendText;
 
         public ChannelViewModel(Channel baseChannel) {
             Channel = baseChannel;
 
             UsersView.Source = Channel.Users;
-            UsersView.SortDescriptions.Add(AccessLevelSort);
+            UsersView.SortDescriptions.Add(_accessLevelSort);
         }
 
         public CollectionViewSource UsersView { get; } = new CollectionViewSource();
 
         public Channel Channel {
-            get { return _channel; }
+            get { return channel; }
             set {
-                if (_channel == value) return;
+                if (channel == value) return;
 
-                _channel = value;
+                channel = value;
                 NotifyPropertyChanged("Channel");
             }
         }
 
         public string SendText {
-            get { return _sendText; }
+            get { return sendText; }
             set {
-                if (value == _sendText) return;
+                if (value == sendText) return;
 
-                _sendText = value;
+                sendText = value;
                 NotifyPropertyChanged("SendText");
             }
         }
 
-        public ICommand KeyUp_Enter_Command => new ActionCommand(KeyUp_Enter);
+        public ICommand KeyUpEnterCommand => new ActionCommand(KeyUp_Enter);
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -67,7 +67,7 @@ namespace Avocado {
             } else {
                 Channel.InvokeMessage(new OutputMessage("PRIVMSG", Channel.Name, string.Concat(SendText, "\r\n")));
                 Channel.AppendMessage(new Message(MainViewModel.Nickname, Channel.Name, SendText));
-                _pastInputs.Add(SendText);
+                pastInputs.Add(SendText);
             }
 
             SendText = string.Empty;

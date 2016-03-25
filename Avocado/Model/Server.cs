@@ -11,9 +11,9 @@ using Avocado.Model.Messages;
 
 namespace Avocado.Model {
     public class Server : INotifyPropertyChanged {
-        private static readonly string[] IrrelevantNicknames = {"NickServ", "ChanServ", MainViewModel.Nickname};
+        private static readonly string[] _irrelevantNicknames = {"NickServ", "ChanServ", MainViewModel.Nickname};
 
-        private string _hostname;
+        private string hostname;
 
         public Server(string address, int port, Action<object, NotifyCollectionChangedEventArgs> channelAddedAction) {
             Channels.CollectionChanged += (sender, args) => channelAddedAction(sender, args);
@@ -41,11 +41,11 @@ namespace Avocado.Model {
         private bool IsVerified { get; set; }
 
         public string Hostname {
-            get { return _hostname; }
+            get { return hostname; }
             set {
-                if (value == _hostname) return;
+                if (value == hostname) return;
 
-                _hostname = value;
+                hostname = value;
                 NotifyPropertyChanged("Hostname");
             }
         }
@@ -99,16 +99,20 @@ namespace Avocado.Model {
             GetChannel(message.Target).AppendMessage(message);
         }
 
-        private void OnMessageRecieved(ChannelMessage message) {
+        private void OnMessageRecieved(Message message) {
             if (message.IsPing) {
                 Connection.Write(message.Args);
                 return;
             }
 
-            PerformPreprocessing(message);
+            if (!(message is ChannelMessage)) return;
+
+            ChannelMessage castedMessage = (ChannelMessage)message;
+
+            PerformPreprocessing(castedMessage);
 
             Debug.WriteLine(message.RawMessage, "Output");
-            DisplayMessage(ProcessMessage(message));
+            DisplayMessage(ProcessMessage(castedMessage));
         }
 
         private void PerformPreprocessing(ChannelMessage message) {
@@ -126,7 +130,7 @@ namespace Avocado.Model {
 
             // Check if target needs to be BaseHost
             if (!message.IsRealUser ||
-                IrrelevantNicknames.Contains(message.Target)) { // if target is server
+                _irrelevantNicknames.Contains(message.Target)) { // if target is server
                 message.Target = BaseHost;
             }
         }
@@ -139,6 +143,11 @@ namespace Avocado.Model {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
 
+        /// <summary>
+        /// Processes message based on type
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private Message ProcessMessage(ChannelMessage message) {
             switch (message.Type) {
                 case "NOTICE":
